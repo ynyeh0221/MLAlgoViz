@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Visualizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        .btn {
+            padding: 8px 16px;
+            margin: 0 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Neural Network Function Approximator</h1>
+    
+    <div id="controls">
+        <button id="startBtn" class="btn">Start Training</button>
+        <button id="resetBtn" class="btn">Reset Network</button>
+        <div>Current epoch: <span id="epochCount">0</span></div>
+    </div>
+    
+    <canvas id="networkCanvas" width="700" height="400"></canvas>
+    
+    <h3>Neural Network Visualization</h3>
+    <p>This is a simple placeholder for the neural network visualization.</p>
+    <p>A more complete implementation of the visualization will be added soon.</p>
+    
+    <script>
+        // Basic placeholder visualization
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('networkCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Draw a simple network
+            const drawNetwork = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const layers = [1, 4, 4, 1];
+                const margin = 50;
+                const width = canvas.width - 2 * margin;
+                const height = canvas.height - 2 * margin;
+                const layerSpacing = width / (layers.length - 1);
+                
+                // Draw layers
+                for (let i = 0; i < layers.length; i++) {
+                    const neurons = layers[i];
+                    const startY = margin + (height - (neurons - 1) * 50) / 2;
+                    
+                    for (let j = 0; j < neurons; j++) {
+                        const x = margin + i * layerSpacing;
+                        const y = startY + j * 50;
+                        
+                        // Draw connections first
+                        if (i > 0) {
+                            const prevNeurons = layers[i-1];
+                            const prevStartY = margin + (height - (prevNeurons - 1) * 50) / 2;
+                            
+                            for (let k = 0; k < prevNeurons; k++) {
+                                const prevX = margin + (i-1) * layerSpacing;
+                                const prevY = prevStartY + k * 50;
+                                
+                                ctx.beginPath();
+                                ctx.moveTo(prevX + 15, prevY);
+                                ctx.lineTo(x - 15, y);
+                                ctx.strokeStyle = Math.random() > 0.5 ? 'rgba(0,128,0,0.5)' : 'rgba(255,0,0,0.5)';
+                                ctx.lineWidth = Math.random() * 2 + 1;
+                                ctx.stroke();
+                            }
+                        }
+                        
+                        // Draw neuron
+                        ctx.beginPath();
+                        ctx.arc(x, y, 15, 0, 2 * Math.PI);
+                        ctx.fillStyle = i === 0 ? '#88CCEE' : i === layers.length - 1 ? '#DDCC77' : '#44AA99';
+                        ctx.fill();
+                        ctx.strokeStyle = '#000';
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                        
+                        // Label
+                        ctx.fillStyle = '#000';
+                        ctx.font = '10px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(`${i+1}-${j+1}`, x, y);
+                    }
+                }
+            };
+            
+            // Initialize
+            drawNetwork();
+            
+            // Event handlers
+            document.getElementById('startBtn').addEventListener('click', function() {
+                this.textContent = this.textContent === 'Start Training' ? 'Stop Training' : 'Start Training';
+            });
+            
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                document.getElementById('epochCount').textContent = '0';
+                drawNetwork();
+            });
+        });
+    </script>
+</body>
+</html>
