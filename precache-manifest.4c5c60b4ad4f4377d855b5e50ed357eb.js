@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a9b42f2b929ce0786a35f561e551dd11",
+    "revision": "328a477aad0d1b3b51807cda851b8e5f",
     "url": "/neural-network-visualizer/index.html"
   },
   {
