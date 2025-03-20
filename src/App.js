@@ -1,31 +1,19 @@
-import React from 'react';
-import './App.css';
-
-// Import this if your component exists
-// import NeuralNetworkFunctionApproximator from './components/NeuralNetworkFunctionApproximator';
-
-// Fallback implementation if component file doesn't exist yet
-const NeuralNetworkFunctionApproximator = () => {
-  return (
-    <div>
-      <h2>Neural Network Visualization</h2>
-      <p>The neural network visualization will appear here.</p>
-    </div>
-  );
-};
+import React, { useState } from 'react';
+import NeuralNetworkVisualization from './components/NeuralNetworkFunctionApproximator';
+import VAEVisualizer from './components/VAEVisualizer';
 
 function App() {
+  const [activeComponent, setActiveComponent] = useState('neural');
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Neural Network Function Approximator</h1>
-      </header>
-      <main>
-        <NeuralNetworkFunctionApproximator />
-      </main>
-      <footer>
-        <p>Created for neural network visualization</p>
-      </footer>
+      <div className="tabs">
+        <button onClick={() => setActiveComponent('neural')}>Neural Network Function Approximator</button>
+        <button onClick={() => setActiveComponent('another')}>VAE Visualizer</button>
+      </div>
+      
+      {activeComponent === 'neural' && <NeuralNetworkVisualization />}
+      {activeComponent === 'another' && <VAEVisualizer />}
     </div>
   );
 }
