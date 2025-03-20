@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2c91a4793871d078a5d4aa0c25545e6e",
+    "revision": "c9130ebd8112193d02f4dcdf2acaf845",
     "url": "/neural-network-visualizer/index.html"
   },
   {
-    "revision": "33ee71c4ca92ad789be6",
+    "revision": "1e4d65c82508a3aa585e",
     "url": "/neural-network-visualizer/static/css/main.5ecd60fb.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/neural-network-visualizer/static/js/3.f858ba94.chunk.js"
   },
   {
-    "revision": "33ee71c4ca92ad789be6",
-    "url": "/neural-network-visualizer/static/js/main.cba8a04b.chunk.js"
+    "revision": "1e4d65c82508a3aa585e",
+    "url": "/neural-network-visualizer/static/js/main.fcb2bcac.chunk.js"
   },
   {
     "revision": "89348771c23ed7d02d14",

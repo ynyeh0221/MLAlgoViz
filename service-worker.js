@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/neural-network-visualizer/precache-manifest.0f284fa0ef38d19f0c4e72774115c6ef.js"
+  "/neural-network-visualizer/precache-manifest.c4f528bed90fd71f9031940cb688d756.js"
 );
 
 self.addEventListener('message', (event) => {
