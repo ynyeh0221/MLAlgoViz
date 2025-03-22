@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "171fa365d40b7fb483d3d519c452b402",
+    "revision": "b44713c50e8ce2abd23695256e6fa3b3",
     "url": "/MLAlgoViz/index.html"
   },
   {
