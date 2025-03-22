@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/neural-network-visualizer/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/neural-network-visualizer/static/js/main.3f054c8f.chunk.js",
-    "main.js.map": "/neural-network-visualizer/static/js/main.3f054c8f.chunk.js.map",
-    "runtime~main.js": "/neural-network-visualizer/static/js/runtime~main.9ab16aaa.js",
-    "runtime~main.js.map": "/neural-network-visualizer/static/js/runtime~main.9ab16aaa.js.map",
-    "static/js/2.692730a3.chunk.js": "/neural-network-visualizer/static/js/2.692730a3.chunk.js",
-    "static/js/2.692730a3.chunk.js.map": "/neural-network-visualizer/static/js/2.692730a3.chunk.js.map",
-    "static/js/3.5c495aaf.chunk.js": "/neural-network-visualizer/static/js/3.5c495aaf.chunk.js",
-    "static/js/3.5c495aaf.chunk.js.map": "/neural-network-visualizer/static/js/3.5c495aaf.chunk.js.map",
-    "index.html": "/neural-network-visualizer/index.html",
-    "precache-manifest.5f3e63d327f4f7c7a8e272f8e98a7bd7.js": "/neural-network-visualizer/precache-manifest.5f3e63d327f4f7c7a8e272f8e98a7bd7.js",
-    "service-worker.js": "/neural-network-visualizer/service-worker.js",
-    "static/css/main.5ecd60fb.chunk.css.map": "/neural-network-visualizer/static/css/main.5ecd60fb.chunk.css.map"
+    "main.css": "/MLAlgoViz/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/MLAlgoViz/static/js/main.3f054c8f.chunk.js",
+    "main.js.map": "/MLAlgoViz/static/js/main.3f054c8f.chunk.js.map",
+    "runtime~main.js": "/MLAlgoViz/static/js/runtime~main.554b4c18.js",
+    "runtime~main.js.map": "/MLAlgoViz/static/js/runtime~main.554b4c18.js.map",
+    "static/js/2.692730a3.chunk.js": "/MLAlgoViz/static/js/2.692730a3.chunk.js",
+    "static/js/2.692730a3.chunk.js.map": "/MLAlgoViz/static/js/2.692730a3.chunk.js.map",
+    "static/js/3.5c495aaf.chunk.js": "/MLAlgoViz/static/js/3.5c495aaf.chunk.js",
+    "static/js/3.5c495aaf.chunk.js.map": "/MLAlgoViz/static/js/3.5c495aaf.chunk.js.map",
+    "index.html": "/MLAlgoViz/index.html",
+    "precache-manifest.86bd85ca9b8b7ef4ea864602ec1c65ed.js": "/MLAlgoViz/precache-manifest.86bd85ca9b8b7ef4ea864602ec1c65ed.js",
+    "service-worker.js": "/MLAlgoViz/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/MLAlgoViz/static/css/main.5ecd60fb.chunk.css.map"
   }
 }
