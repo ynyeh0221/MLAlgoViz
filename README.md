@@ -1,4 +1,4 @@
-# Neural Network Visualizer
+# MLAlgoViz
 
 Interactive neural network visualization and training demonstration.
 
