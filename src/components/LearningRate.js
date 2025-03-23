@@ -295,29 +295,6 @@ const LRScheduleVisualizer = () => {
         </div>
       </div>
       
-      <div style={{marginBottom: "16px", display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center"}}>
-        {Object.entries(SCHEDULE_COLORS).map(([schedule, color]) => (
-          <button 
-            key={schedule}
-            onClick={() => toggleSchedule(schedule)}
-            style={{ 
-              padding: "4px 12px", 
-              borderRadius: "4px", 
-              fontSize: "0.75rem",
-              border: "1px solid",
-              borderColor: activeSchedules.includes(schedule) ? color : "#e5e7eb",
-              backgroundColor: activeSchedules.includes(schedule) ? `${color}20` : "transparent",
-              color: activeSchedules.includes(schedule) ? "inherit" : "#9ca3af",
-              fontWeight: activeSchedules.includes(schedule) ? "500" : "normal",
-              cursor: "pointer"
-            }}
-          >
-            <span style={{display: "inline-block", width: "12px", height: "12px", marginRight: "4px", borderRadius: "50%", backgroundColor: color}}></span>
-            {schedule.charAt(0).toUpperCase() + schedule.slice(1)}
-          </button>
-        ))}
-      </div>
-      
       <div style={{width: "100%", backgroundColor: "white", padding: "12px", borderRadius: "8px", border: "1px solid #e5e7eb", marginBottom: "16px"}}>
         <h2 style={{fontSize: "1.125rem", fontWeight: "500", marginBottom: "8px"}}>Learning Rate Schedules</h2>
         
@@ -341,7 +318,12 @@ const LRScheduleVisualizer = () => {
                 label={{ value: 'Learning Rate', angle: -90, position: 'insideLeft', offset: -15 }}
               />
               <Tooltip content={<SimpleTooltip />} />
-              <Legend verticalAlign="top" height={36} />
+              <Legend 
+                verticalAlign="top" 
+                height={36} 
+                onClick={(e) => toggleSchedule(e.dataKey.includes('loss') ? e.dataKey.split('_')[0] : e.dataKey === 'step_decay' ? 'step' : e.dataKey)}
+                wrapperStyle={{ cursor: 'pointer' }}
+              />
               
               <ReferenceLine 
                 x={Math.floor(totalSteps * warmupPct)} 
