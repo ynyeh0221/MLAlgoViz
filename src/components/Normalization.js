@@ -148,68 +148,62 @@ const NormalizationVisualization = () => {
     return group === 0 ? 'bg-purple-50' : 'bg-indigo-50';
   };
 
-  // Render a cell in the matrix
-  const renderCell = (value, row, col, isInput) => {
-    const bgColor = getCellColor(row, col, isInput);
-    const isSelected = selectedCell && selectedCell[0] === row && selectedCell[1] === col;
-    const borderColor = isSelected ? (isInput ? 'border-gray-800' : 'border-gray-600') : 'border-gray-300';
-    const groupStyle = getGroupStyle(col);
-    
-    // Add visual group indicator
-    const groupIndicator = normType === 'group' ? 
-      `${Math.floor(col/2) === 0 ? 'after:content-["G1"] after:absolute after:top-0 after:right-0 after:text-xs after:bg-purple-200 after:px-1 after:py-0.5 after:rounded-bl after:text-purple-800' : 
-      'after:content-["G2"] after:absolute after:top-0 after:right-0 after:text-xs after:bg-indigo-200 after:px-1 after:py-0.5 after:rounded-bl after:text-indigo-800'}` : '';
-    
-    return (
-      <div 
-        className={`w-16 h-16 border ${borderColor} flex items-center justify-center ${bgColor} ${groupStyle} cursor-pointer hover:bg-gray-100 relative ${groupIndicator}`}
-        onClick={() => setSelectedCell([row, col])}
-      >
-        {value}
-      </div>
-    );
-  };
-
-  // Render a matrix
+  // Render a matrix using an HTML table structure
   const renderMatrix = (matrix, isInput) => {
+    if (!matrix || matrix.length === 0) return null;
+    
     return (
-      <div>
-        {showLabels && (
-          <div className="flex mb-1 ml-8">
-            {matrix[0].map((_, colIndex) => (
-              <div key={colIndex} className="w-16 text-center text-sm font-medium">
-                Feature {colIndex+1}
-                {normType === 'group' && (
-                  <div className={`text-xs mt-1 ${colIndex < 2 ? 'text-purple-700' : 'text-indigo-700'}`}>
-                    Group {Math.floor(colIndex/2) + 1}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="flex">
+      <div className="matrix-container">
+        <table className="border-collapse">
           {showLabels && (
-            <div className="flex flex-col justify-center mr-2">
-              {matrix.map((_, rowIndex) => (
-                <div key={rowIndex} className="h-16 flex items-center justify-end pr-2 text-sm font-medium">
-                  Sample {rowIndex+1}
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="border border-gray-400 inline-block">
-            {matrix.map((row, rowIndex) => (
-              <div key={rowIndex} className="flex">
-                {row.map((value, colIndex) => (
-                  <div key={colIndex}>
-                    {renderCell(value, rowIndex, colIndex, isInput)}
-                  </div>
+            <thead>
+              <tr>
+                {/* Empty corner cell */}
+                <th className="w-16"></th>
+                {/* Feature column headers */}
+                {matrix[0].map((_, colIndex) => (
+                  <th key={colIndex} className="w-16 text-center text-sm font-medium p-2">
+                    Feature {colIndex+1}
+                    {normType === 'group' && (
+                      <div className={`text-xs mt-1 ${colIndex < 2 ? 'text-purple-700' : 'text-indigo-700'}`}>
+                        Group {Math.floor(colIndex/2) + 1}
+                      </div>
+                    )}
+                  </th>
                 ))}
-              </div>
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {matrix.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                {/* Row labels */}
+                {showLabels && (
+                  <td className="text-right text-sm font-medium p-2">
+                    Sample {rowIndex+1}
+                  </td>
+                )}
+                {/* Matrix cell values */}
+                {row.map((value, colIndex) => {
+                  const bgColor = getCellColor(rowIndex, colIndex, isInput);
+                  const isSelected = selectedCell && selectedCell[0] === rowIndex && selectedCell[1] === colIndex;
+                  const borderColor = isSelected ? (isInput ? 'border-gray-800' : 'border-gray-600') : 'border-gray-300';
+                  const groupStyle = getGroupStyle(colIndex);
+                  
+                  return (
+                    <td 
+                      key={colIndex} 
+                      className={`w-16 h-16 border ${borderColor} text-center ${bgColor} ${groupStyle} cursor-pointer hover:bg-gray-100`}
+                      onClick={() => setSelectedCell([rowIndex, colIndex])}
+                    >
+                      {value}
+                    </td>
+                  );
+                })}
+              </tr>
             ))}
-          </div>
-        </div>
+          </tbody>
+        </table>
       </div>
     );
   };
@@ -529,7 +523,7 @@ const NormalizationVisualization = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-12 mb-6">
+      <div className="grid grid-cols-2 gap-8 mb-6">
         <div>
           <h2 className="text-lg font-medium mb-3">Input Matrix</h2>
           {inputMatrix.length > 0 && renderMatrix(inputMatrix, true)}
@@ -560,35 +554,34 @@ const NormalizationVisualization = () => {
             <div className="mt-2 text-sm">
               <strong>Best for:</strong> CNNs, large batches (32+)
             </div>
+      </div>
+      <div className="p-3 bg-green-50 rounded">
+        <h4 className="font-medium mb-1">Layer Normalization</h4>
+        <div className="flex justify-center my-2">
+          <div className="bg-green-200 p-2 rounded text-center">
+            <strong>Normalizes all features</strong><br/>within each sample
           </div>
-          <div className="p-3 bg-green-50 rounded">
-            <h4 className="font-medium mb-1">Layer Normalization</h4>
-            <div className="flex justify-center my-2">
-              <div className="bg-green-200 p-2 rounded text-center">
-                <strong>Normalizes all features</strong><br/>within each sample
-              </div>
-            </div>
-            <p className="text-sm">Independent of batch size, works well for sequence models like RNNs and Transformers.</p>
-            <div className="mt-2 text-sm">
-              <strong>Best for:</strong> RNNs, Transformers, NLP
-            </div>
+        </div>
+        <p className="text-sm">Independent of batch size, works well for sequence models like RNNs and Transformers.</p>
+        <div className="mt-2 text-sm">
+          <strong>Best for:</strong> RNNs, Transformers, NLP
+        </div>
+      </div>
+      <div className="p-3 bg-purple-50 rounded">
+        <h4 className="font-medium mb-1">Group Normalization</h4>
+        <div className="flex justify-center my-2">
+          <div className="bg-purple-200 p-2 rounded text-center">
+            <strong>Normalizes feature groups</strong><br/>within each sample
           </div>
-          <div className="p-3 bg-purple-50 rounded">
-            <h4 className="font-medium mb-1">Group Normalization</h4>
-            <div className="flex justify-center my-2">
-              <div className="bg-purple-200 p-2 rounded text-center">
-                <strong>Normalizes feature groups</strong><br/>within each sample
-              </div>
-            </div>
-            <p className="text-sm">A middle ground approach. Features with similar semantics can be grouped together.</p>
-            <div className="mt-2 text-sm">
-              <strong>Best for:</strong> Small batches, high-res images
-            </div>
-          </div>
+        </div>
+        <p className="text-sm">A middle ground approach. Features with similar semantics can be grouped together.</p>
+        <div className="mt-2 text-sm">
+          <strong>Best for:</strong> Small batches, high-res images
         </div>
       </div>
     </div>
-  );
+  </div>
+</div>
+);
 };
-
 export default NormalizationVisualization;
