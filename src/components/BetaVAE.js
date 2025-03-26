@@ -200,68 +200,113 @@ const BetaVAEVisualization = () => {
           </div>
         </div>
         
-        {/* Loss values visualization */}
+        {/* Loss values visualization - ultra robust implementation */}
         <div className="border rounded p-2 flex-1">
           <h3 className="text-sm font-medium mb-2 text-center">Loss Components</h3>
           
-          {/* Simpler, more robust chart implementation */}
-          <div className="flex justify-center items-end h-48 gap-8 mt-4 mb-6">
-            {/* Reconstruction loss */}
-            <div className="flex flex-col items-center">
-              <div 
-                style={{
-                  width: '40px',
-                  height: `${Math.max(20, lossValues.recon * 150)}px`,
-                  backgroundColor: '#3B82F6',
-                  display: 'block',
-                  borderRadius: '4px 4px 0 0',
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-                }}
-              ></div>
-              <div style={{ marginTop: '8px', fontSize: '12px', textAlign: 'center' }}>
-                Recon.
-              </div>
-            </div>
-            
-            {/* KL divergence */}
-            <div className="flex flex-col items-center">
-              <div 
-                style={{
-                  width: '40px',
-                  height: `${Math.max(20, lossValues.kl * 150)}px`,
-                  backgroundColor: '#EF4444',
-                  display: 'block',
-                  borderRadius: '4px 4px 0 0',
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-                }}
-              ></div>
-              <div style={{ marginTop: '8px', fontSize: '12px', textAlign: 'center' }}>
-                KL Div.
-              </div>
-            </div>
-            
-            {/* Total loss */}
-            <div className="flex flex-col items-center">
-              <div 
-                style={{
-                  width: '40px',
-                  height: `${Math.max(20, lossValues.total * 50)}px`,
-                  backgroundColor: '#8B5CF6',
-                  display: 'block',
-                  borderRadius: '4px 4px 0 0',
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-                }}
-              ></div>
-              <div style={{ marginTop: '8px', fontSize: '12px', textAlign: 'center' }}>
-                Total
-              </div>
-            </div>
-          </div>
+          {/* Table-based layout for maximum compatibility */}
+          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '20px 0', margin: '20px 0' }}>
+            <tbody>
+              <tr style={{ height: '150px', verticalAlign: 'bottom' }}>
+                {/* Reconstruction loss */}
+                <td style={{ width: '33%', textAlign: 'center', verticalAlign: 'bottom' }}>
+                  <div style={{ 
+                    margin: '0 auto',
+                    width: '40px', 
+                    height: `${Math.max(20, lossValues.recon * 150)}px`, 
+                    backgroundColor: '#3B82F6',
+                    border: '2px solid #2563EB',
+                    position: 'relative'
+                  }}>
+                    {/* Add text inside bar for extra visibility */}
+                    <div style={{ 
+                      position: 'absolute', 
+                      bottom: '5px', 
+                      left: '0', 
+                      right: '0', 
+                      color: 'white', 
+                      fontSize: '10px',
+                      textAlign: 'center'
+                    }}>
+                      {Math.round(lossValues.recon * 100)}%
+                    </div>
+                  </div>
+                </td>
+                
+                {/* KL divergence */}
+                <td style={{ width: '33%', textAlign: 'center', verticalAlign: 'bottom' }}>
+                  <div style={{ 
+                    margin: '0 auto',
+                    width: '40px', 
+                    height: `${Math.max(20, lossValues.kl * 150)}px`, 
+                    backgroundColor: '#EF4444',
+                    border: '2px solid #DC2626',
+                    position: 'relative'
+                  }}>
+                    {/* Add text inside bar for extra visibility */}
+                    <div style={{ 
+                      position: 'absolute', 
+                      bottom: '5px', 
+                      left: '0', 
+                      right: '0', 
+                      color: 'white', 
+                      fontSize: '10px',
+                      textAlign: 'center'
+                    }}>
+                      {Math.round(lossValues.kl * 100)}%
+                    </div>
+                  </div>
+                </td>
+                
+                {/* Total loss */}
+                <td style={{ width: '33%', textAlign: 'center', verticalAlign: 'bottom' }}>
+                  <div style={{ 
+                    margin: '0 auto',
+                    width: '40px', 
+                    height: `${Math.max(20, lossValues.total * 50)}px`, 
+                    backgroundColor: '#8B5CF6',
+                    border: '2px solid #7C3AED',
+                    position: 'relative'
+                  }}>
+                    {/* Add text inside bar for extra visibility */}
+                    <div style={{ 
+                      position: 'absolute', 
+                      bottom: '5px', 
+                      left: '0', 
+                      right: '0', 
+                      color: 'white', 
+                      fontSize: '10px',
+                      textAlign: 'center'
+                    }}>
+                      {Math.round(lossValues.total * 100)}%
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              
+              {/* Labels row */}
+              <tr>
+                <td style={{ textAlign: 'center', padding: '10px 0' }}>
+                  <strong style={{ fontSize: '12px' }}>Recon.</strong>
+                </td>
+                <td style={{ textAlign: 'center', padding: '10px 0' }}>
+                  <strong style={{ fontSize: '12px' }}>KL Div.</strong>
+                </td>
+                <td style={{ textAlign: 'center', padding: '10px 0' }}>
+                  <strong style={{ fontSize: '12px' }}>Total</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           
-          <div className="text-xs mt-3 text-center">
+          <div style={{ 
+            fontSize: '12px', 
+            marginTop: '10px', 
+            textAlign: 'center',
+            padding: '5px',
+            backgroundColor: '#f8f9fa',
+            borderRadius: '4px'
+          }}>
             β = {beta.toFixed(1)} weighs the KL divergence term
           </div>
         </div>
