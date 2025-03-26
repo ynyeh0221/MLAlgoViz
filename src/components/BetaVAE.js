@@ -203,47 +203,64 @@ const BetaVAEVisualization = () => {
         {/* Loss values visualization */}
         <div className="border rounded p-2 flex-1">
           <h3 className="text-sm font-medium mb-2 text-center">Loss Components</h3>
-          <div className="flex justify-center">
-            <div 
-              className="h-48 relative"
-              style={{ width: Math.max(200, dimensions.width * 0.8) }}
-            >
-              {/* Reconstruction loss */}
-              <div className="absolute bottom-0 left-0 w-full flex justify-around">
-                <div className="flex flex-col items-center" style={{ width: '60px' }}>
-                  <div 
-                    className="w-10 bg-blue-500 rounded-t"
-                    style={{ height: `${Math.max(1, lossValues.recon * 200)}px` }}
-                  ></div>
-                  <div className="text-center text-xs mt-1 w-full">
-                    Recon.
-                  </div>
-                </div>
-                
-                {/* KL divergence */}
-                <div className="flex flex-col items-center" style={{ width: '60px' }}>
-                  <div 
-                    className="w-10 bg-red-500 rounded-t"
-                    style={{ height: `${Math.max(1, lossValues.kl * 200)}px` }}
-                  ></div>
-                  <div className="text-center text-xs mt-1 w-full">
-                    KL Div.
-                  </div>
-                </div>
-                
-                {/* Total loss */}
-                <div className="flex flex-col items-center" style={{ width: '60px' }}>
-                  <div 
-                    className="w-10 bg-purple-500 rounded-t"
-                    style={{ height: `${Math.max(1, lossValues.total * 50)}px` }}
-                  ></div>
-                  <div className="text-center text-xs mt-1 w-full">
-                    Total
-                  </div>
-                </div>
+          
+          {/* Simpler, more robust chart implementation */}
+          <div className="flex justify-center items-end h-48 gap-8 mt-4 mb-6">
+            {/* Reconstruction loss */}
+            <div className="flex flex-col items-center">
+              <div 
+                style={{
+                  width: '40px',
+                  height: `${Math.max(20, lossValues.recon * 150)}px`,
+                  backgroundColor: '#3B82F6',
+                  display: 'block',
+                  borderRadius: '4px 4px 0 0',
+                  border: '1px solid rgba(0,0,0,0.1)',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}
+              ></div>
+              <div style={{ marginTop: '8px', fontSize: '12px', textAlign: 'center' }}>
+                Recon.
+              </div>
+            </div>
+            
+            {/* KL divergence */}
+            <div className="flex flex-col items-center">
+              <div 
+                style={{
+                  width: '40px',
+                  height: `${Math.max(20, lossValues.kl * 150)}px`,
+                  backgroundColor: '#EF4444',
+                  display: 'block',
+                  borderRadius: '4px 4px 0 0',
+                  border: '1px solid rgba(0,0,0,0.1)',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}
+              ></div>
+              <div style={{ marginTop: '8px', fontSize: '12px', textAlign: 'center' }}>
+                KL Div.
+              </div>
+            </div>
+            
+            {/* Total loss */}
+            <div className="flex flex-col items-center">
+              <div 
+                style={{
+                  width: '40px',
+                  height: `${Math.max(20, lossValues.total * 50)}px`,
+                  backgroundColor: '#8B5CF6',
+                  display: 'block',
+                  borderRadius: '4px 4px 0 0',
+                  border: '1px solid rgba(0,0,0,0.1)',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}
+              ></div>
+              <div style={{ marginTop: '8px', fontSize: '12px', textAlign: 'center' }}>
+                Total
               </div>
             </div>
           </div>
+          
           <div className="text-xs mt-3 text-center">
             β = {beta.toFixed(1)} weighs the KL divergence term
           </div>
