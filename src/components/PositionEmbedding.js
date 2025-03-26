@@ -193,58 +193,64 @@ const PositionEmbeddingsComparison = () => {
         <p className="text-xs text-gray-500">Used in: {currentEmbedding?.examples}</p>
       </div>
       
-      {/* Visualization */}
-      <div className="w-full bg-white p-3 rounded-lg border border-gray-200 mb-4 shadow-sm">
-        <h2 className="text-lg font-medium mb-2">Visualization</h2>
-        
-        <div className="w-full h-64 sm:h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart 
-              data={visualizationData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-              <XAxis 
-                dataKey="position" 
-                type="number"
-                domain={[0, sequenceLength - 1]}
-                label={{ value: 'Position', position: 'bottom', offset: 5 }} 
-              />
-              <YAxis 
-                domain={[-1.1, 1.1]}
-                label={{ value: 'Embedding Value', angle: -90, position: 'insideLeft', offset: -5 }}
-              />
-              <Tooltip content={<SimpleTooltip />} />
-              <Legend />
-              
-              {/* Selected position marker */}
-              <ReferenceLine x={selectedPosition} stroke="#000" strokeWidth={1} strokeDasharray="3 3">
-                <Label value="Selected Position" position="top" fontSize={10} />
-              </ReferenceLine>
-              
-              {/* Training length marker for learned embeddings */}
-              {selectedEmbedding === 'learned' && (
-                <ReferenceLine x={30} stroke="#ef4444" strokeDasharray="3 3">
-                  <Label value="Training Length Limit" position="insideBottomRight" fontSize={10} fill="#ef4444" />
-                </ReferenceLine>
-              )}
-              
-              {/* Draw lines for each dimension */}
-              {dimensions.map((dim, i) => (
-                <Line 
-                  key={dim} 
-                  type="monotone" 
-                  dataKey={dim} 
-                  name={labels[i]} 
-                  stroke={colors[i]} 
-                  strokeWidth={2}
-                  dot={false} 
-                />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+{/* Visualization */}
+<div className="w-full bg-white p-3 rounded-lg border border-gray-200 mb-4 shadow-sm">
+  <h2 className="text-lg font-medium mb-2">Visualization</h2>
+  
+  <div className="w-full" style={{ height: '300px' }}>
+    {visualizationData.length > 0 ? (
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart 
+          data={visualizationData}
+          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+          <XAxis 
+            dataKey="position" 
+            type="number"
+            domain={[0, sequenceLength - 1]}
+            label={{ value: 'Position', position: 'bottom', offset: 5 }} 
+          />
+          <YAxis 
+            domain={[-1.1, 1.1]}
+            label={{ value: 'Embedding Value', angle: -90, position: 'insideLeft', offset: -5 }}
+          />
+          <Tooltip content={<SimpleTooltip />} />
+          <Legend />
+          
+          {/* Selected position marker */}
+          <ReferenceLine x={selectedPosition} stroke="#000" strokeWidth={1} strokeDasharray="3 3">
+            <Label value="Selected Position" position="top" fontSize={10} />
+          </ReferenceLine>
+          
+          {/* Training length marker for learned embeddings */}
+          {selectedEmbedding === 'learned' && (
+            <ReferenceLine x={30} stroke="#ef4444" strokeDasharray="3 3">
+              <Label value="Training Length Limit" position="insideBottomRight" fontSize={10} fill="#ef4444" />
+            </ReferenceLine>
+          )}
+          
+          {/* Draw lines for each dimension */}
+          {dimensions.map((dim, i) => (
+            <Line 
+              key={dim} 
+              type="monotone" 
+              dataKey={dim} 
+              name={labels[i]} 
+              stroke={colors[i]} 
+              strokeWidth={2}
+              dot={false} 
+            />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    ) : (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-gray-500">Loading chart data...</p>
       </div>
+    )}
+  </div>
+</div>
       
       {/* Position details */}
       <div className="w-full bg-white p-3 rounded-lg border border-gray-200 mb-4 shadow-sm">
