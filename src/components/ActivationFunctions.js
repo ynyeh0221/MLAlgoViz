@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 
 const ActivationFunctionsExplorer = () => {
   const [viewMode, setViewMode] = useState('function'); // 'function' or 'derivative'
   const [selectedFunctions, setSelectedFunctions] = useState(['relu', 'sigmoid', 'tanh']);
   const [dataPoints, setDataPoints] = useState([]);
+  const [activeTab, setActiveTab] = useState('pros');
   
   // Define activation functions and their properties
   const activationFunctions = {
@@ -21,6 +18,7 @@ const ActivationFunctionsExplorer = () => {
         return sigmoid * (1 - sigmoid);
       },
       color: '#8884d8',
+      range: '(0, 1)',
       pros: [
         'Smooth and differentiable everywhere',
         'Output bounded between 0 and 1',
@@ -42,6 +40,7 @@ const ActivationFunctionsExplorer = () => {
       function: (x) => Math.tanh(x),
       derivative: (x) => 1 - Math.pow(Math.tanh(x), 2),
       color: '#82ca9d',
+      range: '(-1, 1)',
       pros: [
         'Zero-centered (outputs between -1 and 1)',
         'Stronger gradients than sigmoid',
@@ -63,6 +62,7 @@ const ActivationFunctionsExplorer = () => {
       function: (x) => Math.max(0, x),
       derivative: (x) => x > 0 ? 1 : 0,
       color: '#ff7300',
+      range: '[0, ∞)',
       pros: [
         'Computationally efficient',
         'No vanishing gradient for positive inputs',
@@ -85,6 +85,7 @@ const ActivationFunctionsExplorer = () => {
       function: (x) => Math.max(0.01 * x, x),
       derivative: (x) => x > 0 ? 1 : 0.01,
       color: '#ff8e00',
+      range: '(-∞, ∞)',
       pros: [
         'Prevents "dying ReLU" problem',
         'Allows negative values to contribute',
@@ -105,6 +106,7 @@ const ActivationFunctionsExplorer = () => {
       function: (x) => Math.max(0.1 * x, x), // Using 0.1 as example α
       derivative: (x) => x > 0 ? 1 : 0.1,    // Using 0.1 as example α
       color: '#ff9e00',
+      range: '(-∞, ∞)',
       pros: [
         'Adaptive negative slope (α is learned)',
         'Can outperform ReLU and Leaky ReLU',
@@ -112,7 +114,7 @@ const ActivationFunctionsExplorer = () => {
       ],
       cons: [
         'Additional parameters to learn',
-        'Can overfit on small datasets',
+        'Can overfit small datasets',
         'Not zero-centered'
       ],
       whenToUse: [
@@ -127,6 +129,7 @@ const ActivationFunctionsExplorer = () => {
       function: (x) => x > 0 ? x : 1 * (Math.exp(x) - 1),
       derivative: (x) => x > 0 ? 1 : 1 * Math.exp(x),
       color: '#ff4500',
+      range: '(-α, ∞)',
       pros: [
         'Smooth function with negative values',
         'Closer to zero-mean activations',
@@ -155,6 +158,7 @@ const ActivationFunctionsExplorer = () => {
         return x > 0 ? lambda : lambda * alpha * Math.exp(x);
       },
       color: '#9932cc',
+      range: 'Self-norm',
       pros: [
         'Self-normalizing (preserves mean/variance)',
         'Helps with vanishing/exploding gradients',
@@ -180,6 +184,7 @@ const ActivationFunctionsExplorer = () => {
         return sigmoid + x * sigmoid * (1 - sigmoid);
       },
       color: '#20b2aa',
+      range: 'Unbounded',
       pros: [
         'Often outperforms ReLU in deep networks',
         'Smooth function with non-monotonic shape',
@@ -207,6 +212,7 @@ const ActivationFunctionsExplorer = () => {
         return 0.5 * (1 + Math.tanh(inner)) + 0.5 * x * dtanh * dinner;
       },
       color: '#4682b4',
+      range: 'Unbounded',
       pros: [
         'Used in modern transformers (BERT, GPT)',
         'Smooth non-monotonic shape',
@@ -229,6 +235,7 @@ const ActivationFunctionsExplorer = () => {
       function: (x) => Math.exp(x) / 10, // Simplified for visualization
       derivative: (x) => Math.exp(x) / 10 * (1 - Math.exp(x) / 10), // Simplified
       color: '#dc143c',
+      range: '(0,1), sum=1',
       pros: [
         'Converts values to probability distribution',
         'Outputs sum to 1 across all classes',
@@ -288,6 +295,31 @@ const ActivationFunctionsExplorer = () => {
     }
   };
 
+  // Function to render a table row for an activation function
+  const renderFunctionTableRow = (key, func) => (
+    <tr key={key}>
+      <td className="px-3 py-2 border-r">
+        <div className="font-medium" style={{color: func.color}}>{func.name}</div>
+        <div className="text-gray-500">{func.formula}</div>
+      </td>
+      <td className="px-3 py-2 border-r">{func.range}</td>
+      <td className="px-3 py-2 border-r">
+        <ul className="list-disc pl-4">
+          {func.pros.map((pro, idx) => (
+            <li key={idx}>{pro}</li>
+          ))}
+        </ul>
+      </td>
+      <td className="px-3 py-2">
+        <ul className="list-disc pl-4">
+          {func.cons.map((con, idx) => (
+            <li key={idx}>{con}</li>
+          ))}
+        </ul>
+      </td>
+    </tr>
+  );
+
   return (
     <div className="flex flex-col w-full space-y-4">
       <div className="w-full border rounded-lg shadow-sm">
@@ -297,14 +329,30 @@ const ActivationFunctionsExplorer = () => {
         <div className="p-4">
           <div className="flex flex-col space-y-4">
             <div className="flex items-center space-x-2">
-              <Switch
-                id="viewMode"
-                checked={viewMode === 'derivative'}
-                onCheckedChange={(checked) => setViewMode(checked ? 'derivative' : 'function')}
-              />
-              <Label htmlFor="viewMode">
+              <div className="relative inline-block w-10 h-5">
+                <input
+                  type="checkbox"
+                  id="viewMode"
+                  className="opacity-0 w-0 h-0"
+                  checked={viewMode === 'derivative'}
+                  onChange={(e) => setViewMode(e.target.checked ? 'derivative' : 'function')}
+                />
+                <span 
+                  className={`absolute cursor-pointer top-0 left-0 right-0 bottom-0 rounded-full transition-colors duration-200 ${
+                    viewMode === 'derivative' ? 'bg-blue-500' : 'bg-gray-300'
+                  }`}
+                >
+                  <span 
+                    className={`absolute h-4 w-4 rounded-full bg-white transition-transform duration-200 ${
+                      viewMode === 'derivative' ? 'transform translate-x-5' : 'transform translate-x-0.5'
+                    }`} 
+                    style={{top: '2px'}}
+                  />
+                </span>
+              </div>
+              <label htmlFor="viewMode" className="ml-2 cursor-pointer">
                 {viewMode === 'function' ? 'Show Function' : 'Show Derivative'}
-              </Label>
+              </label>
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -353,15 +401,21 @@ const ActivationFunctionsExplorer = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-2">
                   {Object.entries(activationFunctions).map(([key, func]) => (
-                    <Button
+                    <button
                       key={key}
-                      variant={selectedFunctions.includes(key) ? "default" : "outline"}
-                      size="sm"
+                      className={`px-3 py-1 text-sm rounded-md border transition-colors ${
+                        selectedFunctions.includes(key) 
+                          ? 'bg-blue-500 text-white border-blue-500' 
+                          : 'bg-white hover:bg-gray-50 border-gray-300'
+                      }`}
                       onClick={() => toggleFunction(key)}
-                      style={{ borderColor: func.color, color: selectedFunctions.includes(key) ? undefined : func.color }}
+                      style={{ 
+                        borderColor: selectedFunctions.includes(key) ? undefined : func.color,
+                        color: selectedFunctions.includes(key) ? undefined : func.color 
+                      }}
                     >
                       {func.name}
-                    </Button>
+                    </button>
                   ))}
                 </div>
                 
@@ -373,34 +427,52 @@ const ActivationFunctionsExplorer = () => {
                     <div className="p-4 text-sm">
                       <p className="font-mono mb-2">{activationFunctions[selectedFunctions[0]].formula}</p>
                       
-                      <Tabs defaultValue="pros">
-                        <TabsList className="grid w-full grid-cols-3">
-                          <TabsTrigger value="pros">Pros</TabsTrigger>
-                          <TabsTrigger value="cons">Cons</TabsTrigger>
-                          <TabsTrigger value="when">When to Use</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="pros" className="pt-2">
-                          <ul className="list-disc pl-4 space-y-1">
-                            {activationFunctions[selectedFunctions[0]].pros.map((pro, idx) => (
-                              <li key={idx}>{pro}</li>
-                            ))}
-                          </ul>
-                        </TabsContent>
-                        <TabsContent value="cons" className="pt-2">
-                          <ul className="list-disc pl-4 space-y-1">
-                            {activationFunctions[selectedFunctions[0]].cons.map((con, idx) => (
-                              <li key={idx}>{con}</li>
-                            ))}
-                          </ul>
-                        </TabsContent>
-                        <TabsContent value="when" className="pt-2">
-                          <ul className="list-disc pl-4 space-y-1">
-                            {activationFunctions[selectedFunctions[0]].whenToUse.map((use, idx) => (
-                              <li key={idx}>{use}</li>
-                            ))}
-                          </ul>
-                        </TabsContent>
-                      </Tabs>
+                      <div className="border-b mb-2">
+                        <div className="flex space-x-2 mb-2">
+                          <button 
+                            className={`px-3 py-1 rounded-t-md ${activeTab === 'pros' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+                            onClick={() => setActiveTab('pros')}
+                          >
+                            Pros
+                          </button>
+                          <button 
+                            className={`px-3 py-1 rounded-t-md ${activeTab === 'cons' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+                            onClick={() => setActiveTab('cons')}
+                          >
+                            Cons
+                          </button>
+                          <button 
+                            className={`px-3 py-1 rounded-t-md ${activeTab === 'when' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+                            onClick={() => setActiveTab('when')}
+                          >
+                            When to Use
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {activeTab === 'pros' && (
+                        <ul className="list-disc pl-4 space-y-1">
+                          {activationFunctions[selectedFunctions[0]].pros.map((pro, idx) => (
+                            <li key={idx}>{pro}</li>
+                          ))}
+                        </ul>
+                      )}
+                      
+                      {activeTab === 'cons' && (
+                        <ul className="list-disc pl-4 space-y-1">
+                          {activationFunctions[selectedFunctions[0]].cons.map((con, idx) => (
+                            <li key={idx}>{con}</li>
+                          ))}
+                        </ul>
+                      )}
+                      
+                      {activeTab === 'when' && (
+                        <ul className="list-disc pl-4 space-y-1">
+                          {activationFunctions[selectedFunctions[0]].whenToUse.map((use, idx) => (
+                            <li key={idx}>{use}</li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   </div>
                 )}
@@ -426,335 +498,129 @@ const ActivationFunctionsExplorer = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200 text-xs">
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.relu.color}}>ReLU</div>
-                        <div className="text-gray-500">f(x) = max(0, x)</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">[0, ∞)</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Computationally efficient</li>
-                          <li>Solves vanishing gradient</li>
-                          <li>Fast convergence</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>"Dying ReLU" problem</li>
-                          <li>Not zero-centered</li>
-                          <li>Unbounded outputs</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.sigmoid.color}}>Sigmoid</div>
-                        <div className="text-gray-500">σ(x) = 1/(1+e^(-x))</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">(0, 1)</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Bounded output</li>
-                          <li>Smooth gradient</li>
-                          <li>Clear probabilistic interpretation</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>Vanishing gradient</li>
-                          <li>Not zero-centered</li>
-                          <li>Computationally expensive</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.tanh.color}}>Tanh</div>
-                        <div className="text-gray-500">tanh(x)</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">(-1, 1)</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Zero-centered</li>
-                          <li>Stronger gradients than sigmoid</li>
-                          <li>Bounded output</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>Still has vanishing gradient</li>
-                          <li>Computationally expensive</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.leakyRelu.color}}>Leaky ReLU</div>
-                        <div className="text-gray-500">f(x) = max(αx, x)</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">(-∞, ∞)</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Prevents dying ReLU</li>
-                          <li>Computationally efficient</li>
-                          <li>Allows negative values</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>Not zero-centered</li>
-                          <li>Requires α hyperparameter</li>
-                          <li>Inconsistent results</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-<td className="px-3 py-2 border-r">
-  <div className="font-medium" style={{color: activationFunctions.prelu.color}}>PReLU</div>
-  <div className="text-gray-500">f(x) = max(αx, x), α learnable</div>
-</td>
-<td className="px-3 py-2 border-r">(-∞, ∞)</td>
-<td className="px-3 py-2 border-r">
-  <ul className="list-disc pl-4">
-    <li>Adaptive negative slope</li>
-    <li>Can outperform ReLU</li>
-    <li>Mitigates dying ReLU</li>
-  </ul>
-</td>
-<td className="px-3 py-2">
-  <ul className="list-disc pl-4">
-    <li>Additional parameters</li>
-    <li>Can overfit small datasets</li>
-    <li>Not zero-centered</li>
-  </ul>
-</td>
-</tr>
-<tr>
-  <td className="px-3 py-2 border-r">
-    <div className="font-medium" style={{color: activationFunctions.elu.color}}>ELU</div>
-    <div className="text-gray-500">f(x) = x or α(e^x-1)</div>
-  </td>
-  <td className="px-3 py-2 border-r">(-α, ∞)</td>
-  <td className="px-3 py-2 border-r">
-    <ul className="list-disc pl-4">
-      <li>Smooth negative values</li>
-      <li>Closer to zero mean</li>
-      <li>Reduces bias shift</li>
-    </ul>
-  </td>
-  <td className="px-3 py-2">
-    <ul className="list-disc pl-4">
-      <li>More expensive than ReLU</li>
-      <li>α hyperparameter</li>
-      <li>Can output negatives</li>
-    </ul>
-  </td>
-</tr>
-<tr>
-  <td className="px-3 py-2 border-r">
-    <div className="font-medium" style={{color: activationFunctions.selu.color}}>SELU</div>
-    <div className="text-gray-500">f(x) = λ(x or α(e^x-1))</div>
-  </td>
-  <td className="px-3 py-2 border-r">Self-norm</td>
-  <td className="px-3 py-2 border-r">
-    <ul className="list-disc pl-4">
-      <li>Self-normalizing</li>
-      <li>Prevents vanishing gradients</li>
-      <li>Can replace batch norm</li>
-    </ul>
-  </td>
-  <td className="px-3 py-2">
-    <ul className="list-disc pl-4">
-      <li>Specific initialization needed</li>
-      <li>Best used for all layers</li>
-      <li>Less established</li>
-    </ul>
-  </td>
-</tr>
-<tr>
-  <td className="px-3 py-2 border-r">
-    <div className="font-medium" style={{color: activationFunctions.gelu.color}}>GELU</div>
-    <div className="text-gray-500">f(x) = x·Φ(x)</div>
-  </td>
-  <td className="px-3 py-2 border-r">Unbounded</td>
-  <td className="px-3 py-2 border-r">
-    <ul className="list-disc pl-4">
-      <li>Used in BERT, GPT models</li>
-      <li>Smooth non-monotonic</li>
-      <li>Strong empirical results</li>
-    </ul>
-  </td>
-  <td className="px-3 py-2">
-    <ul className="list-disc pl-4">
-      <li>Computationally expensive</li>
-      <li>Complex implementation</li>
-      <li>Less intuitive</li>
-    </ul>
-  </td>
-</tr>
-<tr>
-  <td className="px-3 py-2 border-r">
-    <div className="font-medium" style={{color: activationFunctions.swish.color}}>Swish</div>
-    <div className="text-gray-500">f(x) = x·sigmoid(x)</div>
-  </td>
-  <td className="px-3 py-2 border-r">Unbounded</td>
-  <td className="px-3 py-2 border-r">
-    <ul className="list-disc pl-4">
-      <li>Outperforms ReLU</li>
-      <li>Smooth non-monotonic</li>
-      <li>Works with normalization</li>
-    </ul>
-  </td>
-  <td className="px-3 py-2">
-    <ul className="list-disc pl-4">
-      <li>More expensive than ReLU</li>
-      <li>Newer, less established</li>
-      <li>Non-intuitive behavior</li>
-    </ul>
-  </td>
-</tr>
-<tr>
-  <td className="px-3 py-2 border-r">
-    <div className="font-medium" style={{color: activationFunctions.softmax.color}}>Softmax</div>
-    <div className="text-gray-500">e^(x_i) / Σ_j e^(x_j)</div>
-  </td>
-  <td className="px-3 py-2 border-r">(0,1), sum=1</td>
-  <td className="px-3 py-2 border-r">
-    <ul className="list-disc pl-4">
-      <li>Creates probability distribution</li>
-      <li>Ideal for multi-class classification</li>
-      <li>Differentiable</li>
-    </ul>
-  </td>
-  <td className="px-3 py-2">
-    <ul className="list-disc pl-4">
-      <li>Only for multiple outputs</li>
-      <li>Numerical stability issues</li>
-      <li>Computationally expensive</li>
-    </ul>
-  </td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
+                    {Object.entries(activationFunctions).map(([key, func]) => 
+                      renderFunctionTableRow(key, func)
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div className="w-full border rounded-lg shadow-sm p-4 bg-blue-50">
-<h3 className="font-medium mb-2">Activation Functions Evolution Timeline</h3>
-<div className="relative">
-{/* Timeline line */}
-<div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-300"></div>
-
-{/* Timeline entries */}
-<div className="grid grid-cols-2 gap-4">
-{/* 1940s-50s */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">1940s-50s</div>
-  <div>Linear & Step Functions</div>
-</div>
-<div className="pl-4 py-4">
-  <div>First neural networks used simple threshold/step functions</div>
-  <div className="text-gray-600 text-sm">Problem: Not differentiable</div>
-</div>
-
-{/* 1970s-80s */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">1970s-80s</div>
-  <div className="text-purple-700">Sigmoid & Tanh</div>
-</div>
-<div className="pl-4 py-4">
-  <div>Smooth, differentiable activation functions</div>
-  <div className="text-gray-600 text-sm">Problem: Vanishing gradient in deep networks</div>
-</div>
-
-{/* 2010 */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">2010</div>
-  <div className="text-orange-500">ReLU</div>
-</div>
-<div className="pl-4 py-4">
-  <div>Simplified, faster computation, no vanishing gradient for positive inputs</div>
-  <div className="text-gray-600 text-sm">Problem: "Dying ReLU" - neurons can permanently die during training</div>
-</div>
-
-{/* 2013 */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">2013</div>
-  <div className="text-orange-600">Leaky ReLU</div>
-</div>
-<div className="pl-4 py-4">
-  <div>Allows small negative values (α*x) to prevent dying neurons</div>
-  <div className="text-gray-600 text-sm">Problem: α hyperparameter needs tuning</div>
-</div>
-
-{/* 2015 */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">2015</div>
-  <div className="text-orange-700">PReLU</div>
-</div>
-<div className="pl-4 py-4">
-  <div>Makes the α parameter learnable rather than fixed</div>
-  <div className="text-gray-600 text-sm">Problem: Additional parameters, can overfit</div>
-</div>
-
-{/* 2015 */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">2015</div>
-  <div className="text-red-500">ELU</div>
-</div>
-<div className="pl-4 py-4">
-  <div>Introduced by Clevert et al., smooth negative values with saturation</div>
-  <div className="text-gray-600 text-sm">Problem: Computationally more expensive than ReLU</div>
-</div>
-
-{/* 2016 */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">2016</div>
-  <div className="text-blue-500">GELU</div>
-</div>
-<div className="pl-4 py-4">
-  <div>Combines properties from ReLU and dropout with probabilistic approach</div>
-  <div className="text-gray-600 text-sm">Later adopted in transformers (BERT, GPT)</div>
-</div>
-
-{/* 2017 */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">2017</div>
-  <div className="text-purple-500">SELU</div>
-</div>
-<div className="pl-4 py-4">
-  <div>Introduced by Klambauer et al., self-normalizing neural networks</div>
-  <div className="text-gray-600 text-sm">Designed to maintain normalized activations across layers</div>
-</div>
-
-{/* 2017 */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">2017</div>
-  <div className="text-teal-500">Swish</div>
-</div>
-<div className="pl-4 py-4">
-  <div>x * sigmoid(x), discovered through automated search</div>
-  <div className="text-gray-600 text-sm">Similar to GELU with strong empirical performance</div>
-</div>
-
-{/* Present */}
-<div className="text-right pr-4 py-4">
-  <div className="font-semibold">Present</div>
-  <div>Task-specific choice</div>
-</div>
-<div className="pl-4 py-4">
-  <div>Different functions excel in different contexts</div>
-  <div className="text-gray-600 text-sm">ReLU variants for CNN, GELU/Swish for transformers</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-);
+      <div className="w-full border rounded-lg shadow-sm p-4 bg-blue-50">
+        <h3 className="font-medium mb-2">Activation Functions Evolution Timeline</h3>
+        <div className="relative">
+          {/* Timeline line */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-300"></div>
+          
+          {/* Timeline entries */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* 1940s-50s */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">1940s-50s</div>
+              <div>Linear & Step Functions</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>First neural networks used simple threshold/step functions</div>
+              <div className="text-gray-600 text-sm">Problem: Not differentiable</div>
+            </div>
+            
+            {/* 1970s-80s */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">1970s-80s</div>
+              <div className="text-purple-700">Sigmoid & Tanh</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>Smooth, differentiable activation functions</div>
+              <div className="text-gray-600 text-sm">Problem: Vanishing gradient in deep networks</div>
+            </div>
+            
+            {/* 2010 */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">2010</div>
+              <div className="text-orange-500">ReLU</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>Simplified, faster computation, no vanishing gradient for positive inputs</div>
+              <div className="text-gray-600 text-sm">Problem: "Dying ReLU" - neurons can permanently die during training</div>
+            </div>
+            
+            {/* 2013 */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">2013</div>
+              <div className="text-orange-600">Leaky ReLU</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>Allows small negative values (α*x) to prevent dying neurons</div>
+              <div className="text-gray-600 text-sm">Problem: α hyperparameter needs tuning</div>
+            </div>
+            
+            {/* 2015 */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">2015</div>
+              <div className="text-orange-700">PReLU</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>Makes the α parameter learnable rather than fixed</div>
+              <div className="text-gray-600 text-sm">Problem: Additional parameters, can overfit</div>
+            </div>
+            
+            {/* 2015 */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">2015</div>
+              <div className="text-red-500">ELU</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>Introduced by Clevert et al., smooth negative values with saturation</div>
+              <div className="text-gray-600 text-sm">Problem: Computationally more expensive than ReLU</div>
+            </div>
+            
+            {/* 2016 */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">2016</div>
+              <div className="text-blue-500">GELU</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>Combines properties from ReLU and dropout with probabilistic approach</div>
+              <div className="text-gray-600 text-sm">Later adopted in transformers (BERT, GPT)</div>
+            </div>
+            
+            {/* 2017 */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">2017</div>
+              <div className="text-purple-500">SELU</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>Introduced by Klambauer et al., self-normalizing neural networks</div>
+              <div className="text-gray-600 text-sm">Designed to maintain normalized activations across layers</div>
+            </div>
+            
+            {/* 2017 */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">2017</div>
+              <div className="text-teal-500">Swish</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>x * sigmoid(x), discovered through automated search</div>
+              <div className="text-gray-600 text-sm">Similar to GELU with strong empirical performance</div>
+            </div>
+            
+            {/* Present */}
+            <div className="text-right pr-4 py-4">
+              <div className="font-semibold">Present</div>
+              <div>Task-specific choice</div>
+            </div>
+            <div className="pl-4 py-4">
+              <div>Different functions excel in different contexts</div>
+              <div className="text-gray-600 text-sm">ReLU variants for CNN, GELU/Swish for transformers</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ActivationFunctionsExplorer;
