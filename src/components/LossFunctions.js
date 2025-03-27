@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Slider } from '@/components/ui/slider';
 
 const LossFunctionsVisualization = () => {
-  // States for interactive parameters
-  const [prediction, setPrediction] = useState(0.5);
-  const [huberDelta, setHuberDelta] = useState(1.0);
-  const [marginValue, setMarginValue] = useState(1.0);
+  // States for fixed parameters (no longer interactive)
+  const [huberDelta] = useState(0.30);
+  const [marginValue] = useState(0.40);
+  const [activeTab, setActiveTab] = useState('plots');
   
   // Generate data points for visualizations
   const generateData = () => {
@@ -48,7 +45,7 @@ const LossFunctionsVisualization = () => {
   // Update data when parameters change
   useEffect(() => {
     setData(generateData());
-  }, [prediction, huberDelta, marginValue]);
+  }, []);
 
   const lossFunctionInfo = {
     mse: {
@@ -133,57 +130,218 @@ const LossFunctionsVisualization = () => {
     }
   };
 
+  // Styles for custom tabs and card components
+  const styles = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1rem',
+      padding: '1rem',
+      maxWidth: '1200px',
+      margin: '0 auto',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    },
+    title: {
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginBottom: '1rem'
+    },
+    tabList: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: '0.5rem',
+      marginBottom: '1rem'
+    },
+    tabButton: (isActive) => ({
+      padding: '0.5rem 1rem',
+      border: '1px solid #ccc',
+      borderRadius: '0.25rem',
+      background: isActive ? '#4f46e5' : '#fff',
+      color: isActive ? '#fff' : '#333',
+      cursor: 'pointer',
+      fontSize: '0.875rem',
+      fontWeight: isActive ? 'bold' : 'normal'
+    }),
+    card: {
+      border: '1px solid #e5e7eb',
+      borderRadius: '0.5rem',
+      overflow: 'hidden',
+      marginBottom: '1rem',
+      background: '#fff',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+    },
+    cardHeader: {
+      padding: '1rem',
+      borderBottom: '1px solid #e5e7eb',
+      background: '#f9fafb'
+    },
+    cardTitle: {
+      fontSize: '1.25rem',
+      fontWeight: 'bold',
+      margin: 0
+    },
+    cardDescription: {
+      fontSize: '0.875rem',
+      color: '#6b7280',
+      marginTop: '0.25rem'
+    },
+    cardContent: {
+      padding: '1rem'
+    },
+    cardFooter: {
+      padding: '1rem',
+      borderTop: '1px solid #e5e7eb',
+      background: '#f9fafb'
+    },
+    sliderContainer: {
+      marginBottom: '1rem'
+    },
+    sliderLabel: {
+      display: 'block',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      marginBottom: '0.5rem'
+    },
+    slider: {
+      width: '100%',
+      marginTop: '0.5rem'
+    },
+    grid: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(1, 1fr)',
+      gap: '1rem',
+      marginBottom: '1rem'
+    },
+    gridMd2: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(1, 1fr)',
+      gap: '1rem',
+      marginBottom: '1rem',
+      '@media (min-width: 768px)': {
+        gridTemplateColumns: 'repeat(2, 1fr)'
+      }
+    },
+    spacerY: {
+      marginTop: '1.5rem',
+      marginBottom: '1.5rem'
+    },
+    listItem: {
+      marginLeft: '1.5rem',
+      position: 'relative',
+      paddingLeft: '0.5rem'
+    },
+    infoBox: {
+      padding: '1rem',
+      borderRadius: '0.375rem',
+      marginBottom: '1rem'
+    },
+    blueBox: {
+      background: '#ebf5ff',
+    },
+    greenBox: {
+      background: '#f0fdf4',
+    },
+    grayBox: {
+      background: '#f9fafb',
+    },
+    yellowBox: {
+      background: '#fffbeb',
+    },
+    sectionHeading: {
+      fontSize: '1.125rem',
+      fontWeight: '500',
+      marginBottom: '0.5rem',
+      color: '#1f2937'
+    },
+    sectionHeadingBlue: {
+      color: '#1e40af'
+    },
+    sectionHeadingGreen: {
+      color: '#15803d'
+    },
+    sectionHeadingYellow: {
+      color: '#92400e'
+    },
+    table: {
+      minWidth: '100%',
+      borderCollapse: 'separate',
+      borderSpacing: 0
+    },
+    th: {
+      padding: '0.5rem 1rem',
+      textAlign: 'left',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      background: '#f9fafb',
+      borderBottom: '1px solid #e5e7eb'
+    },
+    td: {
+      padding: '0.5rem 1rem',
+      borderBottom: '1px solid #e5e7eb',
+      fontSize: '0.875rem'
+    },
+    chartContainer: {
+      height: '16rem'
+    }
+  };
+
+  // Apply media query for grid
+  useEffect(() => {
+    const handleResize = () => {
+      const gridElements = document.querySelectorAll('.grid-md-2');
+      gridElements.forEach(element => {
+        if (window.innerWidth >= 768) {
+          element.style.gridTemplateColumns = 'repeat(2, 1fr)';
+        } else {
+          element.style.gridTemplateColumns = 'repeat(1, 1fr)';
+        }
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="flex flex-col space-y-4 p-4 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-4">Neural Network Loss Functions Visualization</h1>
+    <div style={styles.container}>
+      <h1 style={styles.title}>Neural Network Loss Functions Visualization</h1>
       
-      <Tabs defaultValue="plots" className="w-full">
-        <TabsList className="grid grid-cols-3">
-          <TabsTrigger value="plots">Loss Function Plots</TabsTrigger>
-          <TabsTrigger value="fundamentals">Why Different Loss Functions</TabsTrigger>
-          <TabsTrigger value="details">Detailed Explanations</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="plots" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Interactive controls */}
-            <Card className="col-span-1 md:col-span-2">
-              <CardHeader>
-                <CardTitle>Interactive Parameters</CardTitle>
-                <CardDescription>Adjust parameters to see how loss functions behave</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Huber Loss Delta: {huberDelta.toFixed(2)}</label>
-                  <Slider
-                    value={[huberDelta]}
-                    min={0.1}
-                    max={2}
-                    step={0.1}
-                    onValueChange={(value) => setHuberDelta(value[0])}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Hinge Loss Margin: {marginValue.toFixed(2)}</label>
-                  <Slider
-                    value={[marginValue]}
-                    min={0.1}
-                    max={2}
-                    step={0.1}
-                    onValueChange={(value) => setMarginValue(value[0])}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Loss function charts */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Regression Loss Functions</CardTitle>
-                <CardDescription>MSE, MAE, and Huber Loss</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64">
+      {/* Custom Tabs */}
+      <div style={styles.tabList}>
+        <button 
+          style={styles.tabButton(activeTab === 'plots')}
+          onClick={() => setActiveTab('plots')}
+        >
+          Loss Function Plots
+        </button>
+        <button 
+          style={styles.tabButton(activeTab === 'fundamentals')}
+          onClick={() => setActiveTab('fundamentals')}
+        >
+          Why Different Loss Functions
+        </button>
+        <button 
+          style={styles.tabButton(activeTab === 'details')}
+          onClick={() => setActiveTab('details')}
+        >
+          Detailed Explanations
+        </button>
+      </div>
+      
+      {/* Plots Tab */}
+      {activeTab === 'plots' && (
+        <div style={styles.grid}>
+          <div className="grid-md-2" style={{display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '1rem'}}>
+            <div style={styles.card}>
+              <div style={styles.cardHeader}>
+                <div style={styles.cardTitle}>Regression Loss Functions</div>
+                <div style={styles.cardDescription}>MSE, MAE, and Huber Loss</div>
+              </div>
+              <div style={styles.cardContent}>
+                <div style={styles.chartContainer}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={data}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -207,16 +365,16 @@ const LossFunctionsVisualization = () => {
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
             
-            <Card>
-              <CardHeader>
-                <CardTitle>Classification Loss Functions</CardTitle>
-                <CardDescription>Binary Cross-Entropy and Hinge Loss</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64">
+            <div style={styles.card}>
+              <div style={styles.cardHeader}>
+                <div style={styles.cardTitle}>Classification Loss Functions</div>
+                <div style={styles.cardDescription}>Binary Cross-Entropy and Hinge Loss</div>
+              </div>
+              <div style={styles.cardContent}>
+                <div style={styles.chartContainer}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={data}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -239,167 +397,169 @@ const LossFunctionsVisualization = () => {
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="fundamentals">
-          <div className="grid grid-cols-1 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Why Regression and Classification Need Different Loss Functions</CardTitle>
-                <CardDescription>Understanding the fundamental differences in simple terms</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <h3 className="text-lg font-medium text-blue-800 mb-2">Regression Tasks</h3>
-                    <p className="mb-2">Imagine you're trying to predict house prices or tomorrow's temperature.</p>
-                    <p className="mb-2"><strong>What's being predicted:</strong> Continuous numbers (like $350,000 or 72°F)</p>
-                    <p className="mb-2"><strong>How errors are measured:</strong> By the distance between prediction and actual value</p>
-                    <p><strong>Real-world analogy:</strong> Like measuring how far your arrow landed from the bullseye</p>
-                  </div>
-                  
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <h3 className="text-lg font-medium text-green-800 mb-2">Classification Tasks</h3>
-                    <p className="mb-2">Imagine you're trying to identify spam emails or diagnose a disease.</p>
-                    <p className="mb-2"><strong>What's being predicted:</strong> Categories or classes (like "spam/not spam" or "cat/dog")</p>
-                    <p className="mb-2"><strong>How errors are measured:</strong> By whether the prediction is right or wrong, and how confident you were</p>
-                    <p><strong>Real-world analogy:</strong> Like betting on a horse race - you either win or lose, and it matters how much you bet</p>
-                  </div>
+        </div>
+      )}
+      
+      {/* Fundamentals Tab */}
+      {activeTab === 'fundamentals' && (
+        <div style={styles.grid}>
+          <div style={styles.card}>
+            <div style={styles.cardHeader}>
+              <div style={styles.cardTitle}>Why Regression and Classification Need Different Loss Functions</div>
+              <div style={styles.cardDescription}>Understanding the fundamental differences in simple terms</div>
+            </div>
+            <div style={styles.cardContent}>
+              <div className="grid-md-2" style={{display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '1rem', marginBottom: '1.5rem'}}>
+                <div style={{...styles.infoBox, ...styles.blueBox}}>
+                  <h3 style={{...styles.sectionHeading, ...styles.sectionHeadingBlue}}>Regression Tasks</h3>
+                  <p style={{marginBottom: '0.5rem'}}>Imagine you're trying to predict house prices or tomorrow's temperature.</p>
+                  <p style={{marginBottom: '0.5rem'}}><strong>What's being predicted:</strong> Continuous numbers (like $350,000 or 72°F)</p>
+                  <p style={{marginBottom: '0.5rem'}}><strong>How errors are measured:</strong> By the distance between prediction and actual value</p>
+                  <p><strong>Real-world analogy:</strong> Like measuring how far your arrow landed from the bullseye</p>
                 </div>
                 
-                <div className="mt-6">
-                  <h3 className="text-lg font-medium mb-2">Why They Need Different Loss Functions</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-gray-800">Different Types of Errors</h4>
-                      <p>In regression, being off by 10 or by 100 matters (different magnitudes of error). In classification, you're either right or wrong, but your confidence level matters.</p>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-gray-800">Different Learning Behaviors</h4>
-                      <p>Regression loss functions guide the model to find the "shortest path" to the correct value. Classification loss functions push the model to draw clear boundaries between categories.</p>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-gray-800">Different Output Ranges</h4>
-                      <p>Regression outputs can be any number (even negative). Classification often outputs probabilities (0-1) or scores, requiring special handling.</p>
-                    </div>
-                    
-                    <div className="bg-yellow-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-yellow-800">Why Cross-Entropy is Perfect for Classification</h4>
-                      <p className="mb-2">Cross-Entropy Loss has special properties that make it ideal for classification tasks:</p>
-                      <ul className="list-disc list-inside space-y-1">
-                        <li>It measures the difference between probability distributions (your prediction vs. the truth)</li>
-                        <li>It severely punishes confident wrong predictions (like being 99% sure an email is not spam when it actually is)</li>
-                        <li>It works naturally with the probability outputs (0-1) that classification models produce</li>
-                        <li>It has favorable gradient properties when used with sigmoid/softmax functions</li>
-                      </ul>
-                      <p className="mt-2"><strong>Real-world analogy:</strong> It's like a teacher who doesn't mind if you're unsure and get something wrong, but severely penalizes you when you confidently assert an incorrect answer.</p>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-gray-800">Real-World Example: Weather Prediction</h4>
-                      <p><strong>Regression task:</strong> Predicting tomorrow's temperature (72°F, 73°F, etc.)<br />
-                      <strong>Classification task:</strong> Predicting if it will rain (Yes/No)</p>
-                      <p>The temperature prediction needs MSE/MAE to measure "how far off" you were.<br />
-                      The rain prediction needs Cross-Entropy to penalize confident wrong predictions (like confidently saying "no rain" right before a downpour).</p>
-                    </div>
-                  </div>
+                <div style={{...styles.infoBox, ...styles.greenBox}}>
+                  <h3 style={{...styles.sectionHeading, ...styles.sectionHeadingGreen}}>Classification Tasks</h3>
+                  <p style={{marginBottom: '0.5rem'}}>Imagine you're trying to identify spam emails or diagnose a disease.</p>
+                  <p style={{marginBottom: '0.5rem'}}><strong>What's being predicted:</strong> Categories or classes (like "spam/not spam" or "cat/dog")</p>
+                  <p style={{marginBottom: '0.5rem'}}><strong>How errors are measured:</strong> By whether the prediction is right or wrong, and how confident you were</p>
+                  <p><strong>Real-world analogy:</strong> Like betting on a horse race - you either win or lose, and it matters how much you bet</p>
                 </div>
+              </div>
+              
+              <div style={styles.spacerY}>
+                <h3 style={styles.sectionHeading}>Why They Need Different Loss Functions</h3>
                 
-                <div className="mt-6">
-                  <h3 className="text-lg font-medium mb-2">Choosing the Right Loss Function</h3>
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead>
-                        <tr className="bg-gray-50">
-                          <th className="px-4 py-2 text-left">If your task is...</th>
-                          <th className="px-4 py-2 text-left">And you care about...</th>
-                          <th className="px-4 py-2 text-left">Consider using...</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        <tr>
-                          <td className="px-4 py-2">Regression</td>
-                          <td className="px-4 py-2">Penalizing large errors more</td>
-                          <td className="px-4 py-2">Mean Squared Error (MSE)</td>
-                        </tr>
-                        <tr className="bg-gray-50">
-                          <td className="px-4 py-2">Regression</td>
-                          <td className="px-4 py-2">Being robust to outliers</td>
-                          <td className="px-4 py-2">Mean Absolute Error (MAE)</td>
-                        </tr>
-                        <tr>
-                          <td className="px-4 py-2">Regression</td>
-                          <td className="px-4 py-2">Balance between MSE and MAE</td>
-                          <td className="px-4 py-2">Huber Loss</td>
-                        </tr>
-                        <tr className="bg-gray-50">
-                          <td className="px-4 py-2">Binary Classification</td>
-                          <td className="px-4 py-2">Probability outputs (0-1)</td>
-                          <td className="px-4 py-2">Binary Cross-Entropy</td>
-                        </tr>
-                        <tr>
-                          <td className="px-4 py-2">Multi-class Classification</td>
-                          <td className="px-4 py-2">Probability distribution across classes</td>
-                          <td className="px-4 py-2">Categorical Cross-Entropy</td>
-                        </tr>
-                        <tr>
-                          <td className="px-4 py-2">Classification</td>
-                          <td className="px-4 py-2">Clear decision boundaries</td>
-                          <td className="px-4 py-2">Hinge Loss</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+                  <div style={{...styles.infoBox, ...styles.grayBox}}>
+                    <h4 style={{fontWeight: '500', color: '#374151', marginBottom: '0.25rem'}}>Different Types of Errors</h4>
+                    <p>In regression, being off by 10 or by 100 matters (different magnitudes of error). In classification, you're either right or wrong, but your confidence level matters.</p>
+                  </div>
+                  
+                  <div style={{...styles.infoBox, ...styles.grayBox}}>
+                    <h4 style={{fontWeight: '500', color: '#374151', marginBottom: '0.25rem'}}>Different Learning Behaviors</h4>
+                    <p>Regression loss functions guide the model to find the "shortest path" to the correct value. Classification loss functions push the model to draw clear boundaries between categories.</p>
+                  </div>
+                  
+                  <div style={{...styles.infoBox, ...styles.grayBox}}>
+                    <h4 style={{fontWeight: '500', color: '#374151', marginBottom: '0.25rem'}}>Different Output Ranges</h4>
+                    <p>Regression outputs can be any number (even negative). Classification often outputs probabilities (0-1) or scores, requiring special handling.</p>
+                  </div>
+                  
+                  <div style={{...styles.infoBox, ...styles.yellowBox}}>
+                    <h4 style={{...styles.sectionHeading, ...styles.sectionHeadingYellow, marginBottom: '0.25rem'}}>Why Cross-Entropy is Perfect for Classification</h4>
+                    <p style={{marginBottom: '0.5rem'}}>Cross-Entropy Loss has special properties that make it ideal for classification tasks:</p>
+                    <ul style={{paddingLeft: '1.5rem', marginBottom: '0.5rem'}}>
+                      <li style={{marginBottom: '0.25rem'}}>It measures the difference between probability distributions (your prediction vs. the truth)</li>
+                      <li style={{marginBottom: '0.25rem'}}>It severely punishes confident wrong predictions (like being 99% sure an email is not spam when it actually is)</li>
+                      <li style={{marginBottom: '0.25rem'}}>It works naturally with the probability outputs (0-1) that classification models produce</li>
+                      <li style={{marginBottom: '0.25rem'}}>It has favorable gradient properties when used with sigmoid/softmax functions</li>
+                    </ul>
+                    <p style={{marginTop: '0.5rem'}}><strong>Real-world analogy:</strong> It's like a teacher who doesn't mind if you're unsure and get something wrong, but severely penalizes you when you confidently assert an incorrect answer.</p>
+                  </div>
+                  
+                  <div style={{...styles.infoBox, ...styles.grayBox}}>
+                    <h4 style={{fontWeight: '500', color: '#374151', marginBottom: '0.25rem'}}>Real-World Example: Weather Prediction</h4>
+                    <p><strong>Regression task:</strong> Predicting tomorrow's temperature (72°F, 73°F, etc.)<br />
+                    <strong>Classification task:</strong> Predicting if it will rain (Yes/No)</p>
+                    <p>The temperature prediction needs MSE/MAE to measure "how far off" you were.<br />
+                    The rain prediction needs Cross-Entropy to penalize confident wrong predictions (like confidently saying "no rain" right before a downpour).</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              
+              <div style={styles.spacerY}>
+                <h3 style={styles.sectionHeading}>Choosing the Right Loss Function</h3>
+                <div style={{overflowX: 'auto'}}>
+                  <table style={styles.table}>
+                    <thead>
+                      <tr>
+                        <th style={styles.th}>If your task is...</th>
+                        <th style={styles.th}>And you care about...</th>
+                        <th style={styles.th}>Consider using...</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={styles.td}>Regression</td>
+                        <td style={styles.td}>Penalizing large errors more</td>
+                        <td style={styles.td}>Mean Squared Error (MSE)</td>
+                      </tr>
+                      <tr style={{background: '#f9fafb'}}>
+                        <td style={styles.td}>Regression</td>
+                        <td style={styles.td}>Being robust to outliers</td>
+                        <td style={styles.td}>Mean Absolute Error (MAE)</td>
+                      </tr>
+                      <tr>
+                        <td style={styles.td}>Regression</td>
+                        <td style={styles.td}>Balance between MSE and MAE</td>
+                        <td style={styles.td}>Huber Loss</td>
+                      </tr>
+                      <tr style={{background: '#f9fafb'}}>
+                        <td style={styles.td}>Binary Classification</td>
+                        <td style={styles.td}>Probability outputs (0-1)</td>
+                        <td style={styles.td}>Binary Cross-Entropy</td>
+                      </tr>
+                      <tr>
+                        <td style={styles.td}>Multi-class Classification</td>
+                        <td style={styles.td}>Probability distribution across classes</td>
+                        <td style={styles.td}>Categorical Cross-Entropy</td>
+                      </tr>
+                      <tr style={{background: '#f9fafb'}}>
+                        <td style={styles.td}>Classification</td>
+                        <td style={styles.td}>Clear decision boundaries</td>
+                        <td style={styles.td}>Hinge Loss</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="details">
-          <div className="grid grid-cols-1 gap-4">
-            {Object.entries(lossFunctionInfo).map(([key, info]) => (
-              <Card key={key}>
-                <CardHeader>
-                  <CardTitle>{info.name}</CardTitle>
-                  <CardDescription className="font-mono">{info.formula}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="mb-4">{info.description}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h3 className="font-medium mb-2">Pros:</h3>
-                      <ul className="list-disc list-inside space-y-1">
-                        {info.pros.map((pro, i) => (
-                          <li key={i}>{pro}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="font-medium mb-2">Cons:</h3>
-                      <ul className="list-disc list-inside space-y-1">
-                        {info.cons.map((con, i) => (
-                          <li key={i}>{con}</li>
-                        ))}
-                      </ul>
-                    </div>
+        </div>
+      )}
+      
+      {/* Details Tab */}
+      {activeTab === 'details' && (
+        <div style={styles.grid}>
+          {Object.entries(lossFunctionInfo).map(([key, info]) => (
+            <div key={key} style={styles.card}>
+              <div style={styles.cardHeader}>
+                <div style={styles.cardTitle}>{info.name}</div>
+                <div style={{...styles.cardDescription, fontFamily: 'monospace'}}>{info.formula}</div>
+              </div>
+              <div style={styles.cardContent}>
+                <p style={{marginBottom: '1rem'}}>{info.description}</p>
+                
+                <div className="grid-md-2" style={{display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '1rem'}}>
+                  <div>
+                    <h3 style={{fontWeight: '500', marginBottom: '0.5rem'}}>Pros:</h3>
+                    <ul style={{paddingLeft: '1.5rem'}}>
+                      {info.pros.map((pro, i) => (
+                        <li key={i} style={{marginBottom: '0.25rem'}}>{pro}</li>
+                      ))}
+                    </ul>
                   </div>
-                </CardContent>
-                <CardFooter>
-                  <p><strong>Best used for:</strong> {info.use}</p>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+                  <div>
+                    <h3 style={{fontWeight: '500', marginBottom: '0.5rem'}}>Cons:</h3>
+                    <ul style={{paddingLeft: '1.5rem'}}>
+                      {info.cons.map((con, i) => (
+                        <li key={i} style={{marginBottom: '0.25rem'}}>{con}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div style={styles.cardFooter}>
+                <p><strong>Best used for:</strong> {info.use}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
