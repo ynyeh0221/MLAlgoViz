@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -291,11 +290,11 @@ const ActivationFunctionsExplorer = () => {
 
   return (
     <div className="flex flex-col w-full space-y-4">
-      <Card className="w-full">
-        <CardHeader className="pb-2">
-          <CardTitle>Neural Network Activation Functions Explorer</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <div className="w-full border rounded-lg shadow-sm">
+        <div className="p-4 border-b">
+          <h2 className="text-xl font-semibold">Neural Network Activation Functions Explorer</h2>
+        </div>
+        <div className="p-4">
           <div className="flex flex-col space-y-4">
             <div className="flex items-center space-x-2">
               <Switch
@@ -367,11 +366,11 @@ const ActivationFunctionsExplorer = () => {
                 </div>
                 
                 {selectedFunctions.length === 1 && (
-                  <Card className="mt-4">
-                    <CardHeader className="py-2">
-                      <CardTitle className="text-md">{activationFunctions[selectedFunctions[0]].name}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-sm">
+                  <div className="mt-4 border rounded-lg shadow-sm">
+                    <div className="p-3 border-b">
+                      <h3 className="text-md font-medium">{activationFunctions[selectedFunctions[0]].name}</h3>
+                    </div>
+                    <div className="p-4 text-sm">
                       <p className="font-mono mb-2">{activationFunctions[selectedFunctions[0]].formula}</p>
                       
                       <Tabs defaultValue="pros">
@@ -402,8 +401,8 @@ const ActivationFunctionsExplorer = () => {
                           </ul>
                         </TabsContent>
                       </Tabs>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 )}
                 
                 {selectedFunctions.length !== 1 && (
@@ -413,7 +412,7 @@ const ActivationFunctionsExplorer = () => {
                 )}
               </div>
             </div>
-
+            
             <div className="pt-4">
               <h3 className="font-medium mb-4 text-center">Activation Functions Comparison</h3>
               <div className="overflow-x-auto">
@@ -511,251 +510,251 @@ const ActivationFunctionsExplorer = () => {
                       </td>
                     </tr>
                     <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.elu.color}}>ELU</div>
-                        <div className="text-gray-500">f(x) = x or α(e^x-1)</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">(-α, ∞)</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Smooth negative values</li>
-                          <li>Closer to zero mean</li>
-                          <li>Reduces bias shift</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>More expensive than ReLU</li>
-                          <li>α hyperparameter</li>
-                          <li>Can output negatives</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.prelu.color}}>PReLU</div>
-                        <div className="text-gray-500">f(x) = max(αx, x), α learnable</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">(-∞, ∞)</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Adaptive negative slope</li>
-                          <li>Can outperform ReLU</li>
-                          <li>Mitigates dying ReLU</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>Additional parameters</li>
-                          <li>Can overfit small datasets</li>
-                          <li>Not zero-centered</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.selu.color}}>SELU</div>
-                        <div className="text-gray-500">f(x) = λ(x or α(e^x-1))</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">Self-norm</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Self-normalizing</li>
-                          <li>Prevents vanishing gradients</li>
-                          <li>Can replace batch norm</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>Specific initialization needed</li>
-                          <li>Best used for all layers</li>
-                          <li>Less established</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.swish.color}}>Swish</div>
-                        <div className="text-gray-500">f(x) = x·sigmoid(x)</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">Unbounded</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Outperforms ReLU</li>
-                          <li>Smooth non-monotonic</li>
-                          <li>Works with normalization</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>More expensive than ReLU</li>
-                          <li>Newer, less established</li>
-                          <li>Non-intuitive behavior</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.gelu.color}}>GELU</div>
-                        <div className="text-gray-500">f(x) = x·Φ(x)</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">Unbounded</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Used in BERT, GPT models</li>
-                          <li>Smooth non-monotonic</li>
-                          <li>Strong empirical results</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>Computationally expensive</li>
-                          <li>Complex implementation</li>
-                          <li>Less intuitive</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-3 py-2 border-r">
-                        <div className="font-medium" style={{color: activationFunctions.softmax.color}}>Softmax</div>
-                        <div className="text-gray-500">e^(x_i) / Σ_j e^(x_j)</div>
-                      </td>
-                      <td className="px-3 py-2 border-r">(0,1), sum=1</td>
-                      <td className="px-3 py-2 border-r">
-                        <ul className="list-disc pl-4">
-                          <li>Creates probability distribution</li>
-                          <li>Ideal for multi-class classification</li>
-                          <li>Differentiable</li>
-                        </ul>
-                      </td>
-                      <td className="px-3 py-2">
-                        <ul className="list-disc pl-4">
-                          <li>Only for multiple outputs</li>
-                          <li>Numerical stability issues</li>
-                          <li>Computationally expensive</li>
-                        </ul>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div className="p-4 bg-blue-50 rounded-md mt-4">
-              <h3 className="font-medium mb-2">Activation Functions Evolution Timeline</h3>
-              <div className="relative">
-                {/* Timeline line */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-300"></div>
-                
-                {/* Timeline entries */}
-                <div className="grid grid-cols-2 gap-4">
-                  {/* 1940s-50s */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">1940s-50s</div>
-                    <div>Linear & Step Functions</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>First neural networks used simple threshold/step functions</div>
-                    <div className="text-gray-600 text-sm">Problem: Not differentiable</div>
-                  </div>
-                  
-                  {/* 1970s-80s */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">1970s-80s</div>
-                    <div className="text-purple-700">Sigmoid & Tanh</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>Smooth, differentiable activation functions</div>
-                    <div className="text-gray-600 text-sm">Problem: Vanishing gradient in deep networks</div>
-                  </div>
-                  
-                  {/* 2010 */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">2010</div>
-                    <div className="text-orange-500">ReLU</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>Simplified, faster computation, no vanishing gradient for positive inputs</div>
-                    <div className="text-gray-600 text-sm">Problem: "Dying ReLU" - neurons can permanently die during training</div>
-                  </div>
-                  
-                  {/* 2013 */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">2013</div>
-                    <div className="text-orange-600">Leaky ReLU</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>Allows small negative values (α*x) to prevent dying neurons</div>
-                    <div className="text-gray-600 text-sm">Problem: α hyperparameter needs tuning</div>
-                  </div>
-                  
-                  {/* 2015 */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">2015</div>
-                    <div className="text-orange-700">PReLU</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>Makes the α parameter learnable rather than fixed</div>
-                    <div className="text-gray-600 text-sm">Problem: Additional parameters, can overfit</div>
-                  </div>
-                  
-                  {/* 2015 */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">2015</div>
-                    <div className="text-red-500">ELU</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>Introduced by Clevert et al., smooth negative values with saturation</div>
-                    <div className="text-gray-600 text-sm">Problem: Computationally more expensive than ReLU</div>
-                  </div>
-                  
-                  {/* 2016 */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">2016</div>
-                    <div className="text-blue-500">GELU</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>Combines properties from ReLU and dropout with probabilistic approach</div>
-                    <div className="text-gray-600 text-sm">Later adopted in transformers (BERT, GPT)</div>
-                  </div>
-                  
-                  {/* 2017 */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">2017</div>
-                    <div className="text-purple-500">SELU</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>Introduced by Klambauer et al., self-normalizing neural networks</div>
-                    <div className="text-gray-600 text-sm">Designed to maintain normalized activations across layers</div>
-                  </div>
-                  
-                  {/* 2017 */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">2017</div>
-                    <div className="text-teal-500">Swish</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>x * sigmoid(x), discovered through automated search</div>
-                    <div className="text-gray-600 text-sm">Similar to GELU with strong empirical performance</div>
-                  </div>
-                  
-                  {/* Present */}
-                  <div className="text-right pr-4 py-4">
-                    <div className="font-semibold">Present</div>
-                    <div>Task-specific choice</div>
-                  </div>
-                  <div className="pl-4 py-4">
-                    <div>Different functions excel in different contexts</div>
-                    <div className="text-gray-600 text-sm">ReLU variants for CNN, GELU/Swish for transformers</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+<td className="px-3 py-2 border-r">
+  <div className="font-medium" style={{color: activationFunctions.prelu.color}}>PReLU</div>
+  <div className="text-gray-500">f(x) = max(αx, x), α learnable</div>
+</td>
+<td className="px-3 py-2 border-r">(-∞, ∞)</td>
+<td className="px-3 py-2 border-r">
+  <ul className="list-disc pl-4">
+    <li>Adaptive negative slope</li>
+    <li>Can outperform ReLU</li>
+    <li>Mitigates dying ReLU</li>
+  </ul>
+</td>
+<td className="px-3 py-2">
+  <ul className="list-disc pl-4">
+    <li>Additional parameters</li>
+    <li>Can overfit small datasets</li>
+    <li>Not zero-centered</li>
+  </ul>
+</td>
+</tr>
+<tr>
+  <td className="px-3 py-2 border-r">
+    <div className="font-medium" style={{color: activationFunctions.elu.color}}>ELU</div>
+    <div className="text-gray-500">f(x) = x or α(e^x-1)</div>
+  </td>
+  <td className="px-3 py-2 border-r">(-α, ∞)</td>
+  <td className="px-3 py-2 border-r">
+    <ul className="list-disc pl-4">
+      <li>Smooth negative values</li>
+      <li>Closer to zero mean</li>
+      <li>Reduces bias shift</li>
+    </ul>
+  </td>
+  <td className="px-3 py-2">
+    <ul className="list-disc pl-4">
+      <li>More expensive than ReLU</li>
+      <li>α hyperparameter</li>
+      <li>Can output negatives</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td className="px-3 py-2 border-r">
+    <div className="font-medium" style={{color: activationFunctions.selu.color}}>SELU</div>
+    <div className="text-gray-500">f(x) = λ(x or α(e^x-1))</div>
+  </td>
+  <td className="px-3 py-2 border-r">Self-norm</td>
+  <td className="px-3 py-2 border-r">
+    <ul className="list-disc pl-4">
+      <li>Self-normalizing</li>
+      <li>Prevents vanishing gradients</li>
+      <li>Can replace batch norm</li>
+    </ul>
+  </td>
+  <td className="px-3 py-2">
+    <ul className="list-disc pl-4">
+      <li>Specific initialization needed</li>
+      <li>Best used for all layers</li>
+      <li>Less established</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td className="px-3 py-2 border-r">
+    <div className="font-medium" style={{color: activationFunctions.gelu.color}}>GELU</div>
+    <div className="text-gray-500">f(x) = x·Φ(x)</div>
+  </td>
+  <td className="px-3 py-2 border-r">Unbounded</td>
+  <td className="px-3 py-2 border-r">
+    <ul className="list-disc pl-4">
+      <li>Used in BERT, GPT models</li>
+      <li>Smooth non-monotonic</li>
+      <li>Strong empirical results</li>
+    </ul>
+  </td>
+  <td className="px-3 py-2">
+    <ul className="list-disc pl-4">
+      <li>Computationally expensive</li>
+      <li>Complex implementation</li>
+      <li>Less intuitive</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td className="px-3 py-2 border-r">
+    <div className="font-medium" style={{color: activationFunctions.swish.color}}>Swish</div>
+    <div className="text-gray-500">f(x) = x·sigmoid(x)</div>
+  </td>
+  <td className="px-3 py-2 border-r">Unbounded</td>
+  <td className="px-3 py-2 border-r">
+    <ul className="list-disc pl-4">
+      <li>Outperforms ReLU</li>
+      <li>Smooth non-monotonic</li>
+      <li>Works with normalization</li>
+    </ul>
+  </td>
+  <td className="px-3 py-2">
+    <ul className="list-disc pl-4">
+      <li>More expensive than ReLU</li>
+      <li>Newer, less established</li>
+      <li>Non-intuitive behavior</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td className="px-3 py-2 border-r">
+    <div className="font-medium" style={{color: activationFunctions.softmax.color}}>Softmax</div>
+    <div className="text-gray-500">e^(x_i) / Σ_j e^(x_j)</div>
+  </td>
+  <td className="px-3 py-2 border-r">(0,1), sum=1</td>
+  <td className="px-3 py-2 border-r">
+    <ul className="list-disc pl-4">
+      <li>Creates probability distribution</li>
+      <li>Ideal for multi-class classification</li>
+      <li>Differentiable</li>
+    </ul>
+  </td>
+  <td className="px-3 py-2">
+    <ul className="list-disc pl-4">
+      <li>Only for multiple outputs</li>
+      <li>Numerical stability issues</li>
+      <li>Computationally expensive</li>
+    </ul>
+  </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div className="w-full border rounded-lg shadow-sm p-4 bg-blue-50">
+<h3 className="font-medium mb-2">Activation Functions Evolution Timeline</h3>
+<div className="relative">
+{/* Timeline line */}
+<div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-blue-300"></div>
+
+{/* Timeline entries */}
+<div className="grid grid-cols-2 gap-4">
+{/* 1940s-50s */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">1940s-50s</div>
+  <div>Linear & Step Functions</div>
+</div>
+<div className="pl-4 py-4">
+  <div>First neural networks used simple threshold/step functions</div>
+  <div className="text-gray-600 text-sm">Problem: Not differentiable</div>
+</div>
+
+{/* 1970s-80s */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">1970s-80s</div>
+  <div className="text-purple-700">Sigmoid & Tanh</div>
+</div>
+<div className="pl-4 py-4">
+  <div>Smooth, differentiable activation functions</div>
+  <div className="text-gray-600 text-sm">Problem: Vanishing gradient in deep networks</div>
+</div>
+
+{/* 2010 */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">2010</div>
+  <div className="text-orange-500">ReLU</div>
+</div>
+<div className="pl-4 py-4">
+  <div>Simplified, faster computation, no vanishing gradient for positive inputs</div>
+  <div className="text-gray-600 text-sm">Problem: "Dying ReLU" - neurons can permanently die during training</div>
+</div>
+
+{/* 2013 */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">2013</div>
+  <div className="text-orange-600">Leaky ReLU</div>
+</div>
+<div className="pl-4 py-4">
+  <div>Allows small negative values (α*x) to prevent dying neurons</div>
+  <div className="text-gray-600 text-sm">Problem: α hyperparameter needs tuning</div>
+</div>
+
+{/* 2015 */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">2015</div>
+  <div className="text-orange-700">PReLU</div>
+</div>
+<div className="pl-4 py-4">
+  <div>Makes the α parameter learnable rather than fixed</div>
+  <div className="text-gray-600 text-sm">Problem: Additional parameters, can overfit</div>
+</div>
+
+{/* 2015 */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">2015</div>
+  <div className="text-red-500">ELU</div>
+</div>
+<div className="pl-4 py-4">
+  <div>Introduced by Clevert et al., smooth negative values with saturation</div>
+  <div className="text-gray-600 text-sm">Problem: Computationally more expensive than ReLU</div>
+</div>
+
+{/* 2016 */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">2016</div>
+  <div className="text-blue-500">GELU</div>
+</div>
+<div className="pl-4 py-4">
+  <div>Combines properties from ReLU and dropout with probabilistic approach</div>
+  <div className="text-gray-600 text-sm">Later adopted in transformers (BERT, GPT)</div>
+</div>
+
+{/* 2017 */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">2017</div>
+  <div className="text-purple-500">SELU</div>
+</div>
+<div className="pl-4 py-4">
+  <div>Introduced by Klambauer et al., self-normalizing neural networks</div>
+  <div className="text-gray-600 text-sm">Designed to maintain normalized activations across layers</div>
+</div>
+
+{/* 2017 */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">2017</div>
+  <div className="text-teal-500">Swish</div>
+</div>
+<div className="pl-4 py-4">
+  <div>x * sigmoid(x), discovered through automated search</div>
+  <div className="text-gray-600 text-sm">Similar to GELU with strong empirical performance</div>
+</div>
+
+{/* Present */}
+<div className="text-right pr-4 py-4">
+  <div className="font-semibold">Present</div>
+  <div>Task-specific choice</div>
+</div>
+<div className="pl-4 py-4">
+  <div>Different functions excel in different contexts</div>
+  <div className="text-gray-600 text-sm">ReLU variants for CNN, GELU/Swish for transformers</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+);
 };
 
 export default ActivationFunctionsExplorer;
