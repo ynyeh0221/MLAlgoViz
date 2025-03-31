@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8eded81df7941bbfb64777e07b4a6c25",
+    "revision": "aedbd631b694f3bff5d0ab218bc0dd62",
     "url": "/MLAlgoViz/index.html"
   },
   {
-    "revision": "925aa0c760b432a26df9",
+    "revision": "8da72b9c4aac43aa6acd",
     "url": "/MLAlgoViz/static/css/main.5ecd60fb.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/MLAlgoViz/static/js/3.c600f982.chunk.js"
   },
   {
-    "revision": "925aa0c760b432a26df9",
-    "url": "/MLAlgoViz/static/js/main.217c4e4b.chunk.js"
+    "revision": "8da72b9c4aac43aa6acd",
+    "url": "/MLAlgoViz/static/js/main.a6247987.chunk.js"
   },
   {
     "revision": "793f444121aaa54e486b",
