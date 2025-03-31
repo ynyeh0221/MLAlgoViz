@@ -185,7 +185,7 @@ const InvertibleMatricesDemo = () => {
         );
       }
       
-      // Axis labels (only for even numbers)
+      // Axis labels at -6, -4, -2, 2, 4, 6
       if (i % 2 === 0 && i !== 0 && pos >= 0 && pos <= gridSize) {
         gridLines.push(
           <text key={`xlabel-${i}`} x={pos} y={gridCenter + 15} textAnchor="middle" fontSize="10">{i}</text>
@@ -373,13 +373,12 @@ const InvertibleMatricesDemo = () => {
               {/* Add text to show the area = determinant */}
               <text 
                 x={gridCenter + 40} 
-                y={gridCenter - 80} 
+                y={gridCenter - 40} 
                 fill="#663399" 
                 fontWeight="bold"
                 fontSize="14"
               >
-                Area = |det(A)| = {Math.abs(determinant).toFixed(2)}
-                {determinant === 0 && " → Not Invertible!"}
+                Area = |det(A)| =
               </text>
               
               {/* Original vector */}
