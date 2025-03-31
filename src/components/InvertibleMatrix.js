@@ -21,6 +21,20 @@ const InvertibleMatricesDemo = () => {
   const gridCenter = gridSize / 2;
   const scale = 25;
   
+  // Add preset matrix examples
+  const presetMatrices = [
+    { name: "Identity", matrix: [[1, 0], [0, 1]], desc: "No change to area (det=1)" },
+    { name: "Scaling", matrix: [[2, 0], [0, 2]], desc: "Area scaled by 4 (det=4)" },
+    { name: "Shear", matrix: [[1, 1], [0, 1]], desc: "Area preserved (det=1)" },
+    { name: "Rotation", matrix: [[0, -1], [1, 0]], desc: "Area preserved (det=1)" },
+    { name: "Reflection", matrix: [[-1, 0], [0, 1]], desc: "Area preserved, orientation flipped (det=-1)" },
+    { name: "Non-invertible", matrix: [[1, 1], [1, 1]], desc: "Zero area, not invertible (det=0)" },
+  ];
+  
+  const applyPreset = (preset) => {
+    setMatrix(preset.matrix);
+  };
+  
   useEffect(() => {
     try {
       // Calculate determinant
@@ -187,20 +201,6 @@ const InvertibleMatricesDemo = () => {
     setMatrix(newMatrix);
   };
   
-  // Add preset matrix examples
-  const presetMatrices = [
-    { name: "Identity", matrix: [[1, 0], [0, 1]], desc: "No change to area (det=1)" },
-    { name: "Scaling", matrix: [[2, 0], [0, 2]], desc: "Area scaled by 4 (det=4)" },
-    { name: "Shear", matrix: [[1, 1], [0, 1]], desc: "Area preserved (det=1)" },
-    { name: "Rotation", matrix: [[0, -1], [1, 0]], desc: "Area preserved (det=1)" },
-    { name: "Reflection", matrix: [[-1, 0], [0, 1]], desc: "Area preserved, orientation flipped (det=-1)" },
-    { name: "Non-invertible", matrix: [[1, 2], [0.5, 1]], desc: "Zero area, not invertible (det=0)" },
-  ];
-  
-  const applyPreset = (preset) => {
-    setMatrix(preset.matrix);
-  };
-  
   // Vector input handler
   const handleVectorChange = (index, value) => {
     const newVector = [...vectorX];
@@ -220,7 +220,7 @@ const InvertibleMatricesDemo = () => {
       
       <div className="flex flex-col md:flex-row gap-6">
         <div className="space-y-4 md:w-1/3">
-          <div className="md:w-2/3">
+          <div>
             <h2 className="text-lg font-semibold">Input Matrix A</h2>
             <div className="flex items-center">
               <div className="mr-2 font-bold">A =</div>
@@ -304,12 +304,6 @@ const InvertibleMatricesDemo = () => {
             </div>
           </div>
           
-          {errorMessage && (
-            <div className="p-2 bg-red-100 text-red-800 rounded">
-              {errorMessage}
-            </div>
-          )}
-          
           {inverse && (
             <>
               <div>
@@ -349,14 +343,12 @@ const InvertibleMatricesDemo = () => {
           )}
         </div>
         
-        <div>
+        <div className="md:w-2/3">
           <h2 className="text-xl font-semibold mb-3">Determinant as Area & Transformation</h2>
           <div className="border border-gray-300 rounded p-2 bg-gray-50">
             <svg width={gridSize} height={gridSize} className="mx-auto">
               {renderGrid()}
-              {renderGrid()}
               
-              {/* Unit square parallelogram showing determinant as area */}
               <g>
                 {/* Show the unit square before transformation */}
                 <path 
