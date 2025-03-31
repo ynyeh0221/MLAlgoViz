@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as math from 'mathjs';
 
 const InvertibleMatricesDemo = () => {
-  // State for UI settings
-  const [showDetails, setShowDetails] = useState(true);
+  // State for matrix and vectors
   const [matrix, setMatrix] = useState([
     [3, 1],
     [2, 2]
@@ -46,6 +45,8 @@ const InvertibleMatricesDemo = () => {
         setErrorMessage("Matrix is not invertible (determinant is zero)");
         setInverse(null);
         setProduct(null);
+        setTransformedVector(math.multiply(matrix, vectorX));
+        setInverseMappedVector(null);
         return;
       } else {
         setErrorMessage("");
@@ -73,7 +74,7 @@ const InvertibleMatricesDemo = () => {
   }, [matrix, vectorX]);
   
   // Render a grid point
-  const renderPoint = (x, y, color, size = 3) => {
+  const renderPoint = (x, y, color, size = 4) => {
     const screenX = gridCenter + x * scale;
     const screenY = gridCenter - y * scale;
     return (
@@ -165,23 +166,27 @@ const InvertibleMatricesDemo = () => {
     );
     
     // Grid lines
-    for (let i = -gridSize / (2 * scale); i <= gridSize / (2 * scale); i++) {
+    for (let i = -6; i <= 6; i++) {
       if (i === 0) continue;
       
       const pos = gridCenter + i * scale;
       
       // Horizontal grid line
-      gridLines.push(
-        <line key={`h-${i}`} x1="0" y1={pos} x2={gridSize} y2={pos} stroke="#ccc" strokeWidth="0.5" />
-      );
+      if (pos >= 0 && pos <= gridSize) {
+        gridLines.push(
+          <line key={`h-${i}`} x1="0" y1={pos} x2={gridSize} y2={pos} stroke="#ccc" strokeWidth="0.5" />
+        );
+      }
       
       // Vertical grid line
-      gridLines.push(
-        <line key={`v-${i}`} x1={pos} y1="0" x2={pos} y2={gridSize} stroke="#ccc" strokeWidth="0.5" />
-      );
+      if (pos >= 0 && pos <= gridSize) {
+        gridLines.push(
+          <line key={`v-${i}`} x1={pos} y1="0" x2={pos} y2={gridSize} stroke="#ccc" strokeWidth="0.5" />
+        );
+      }
       
-      // Axis labels
-      if (i % 2 === 0 && i !== 0) {
+      // Axis labels (only for even numbers)
+      if (i % 2 === 0 && i !== 0 && pos >= 0 && pos <= gridSize) {
         gridLines.push(
           <text key={`xlabel-${i}`} x={pos} y={gridCenter + 15} textAnchor="middle" fontSize="10">{i}</text>
         );
@@ -367,8 +372,8 @@ const InvertibleMatricesDemo = () => {
               
               {/* Add text to show the area = determinant */}
               <text 
-                x={gridCenter + 50} 
-                y={gridCenter - 70} 
+                x={gridCenter + 40} 
+                y={gridCenter - 80} 
                 fill="#663399" 
                 fontWeight="bold"
                 fontSize="14"
