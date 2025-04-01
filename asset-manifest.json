@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/MLAlgoViz/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/MLAlgoViz/static/js/main.a6d1b438.chunk.js",
-    "main.js.map": "/MLAlgoViz/static/js/main.a6d1b438.chunk.js.map",
+    "main.js": "/MLAlgoViz/static/js/main.7f8b90ed.chunk.js",
+    "main.js.map": "/MLAlgoViz/static/js/main.7f8b90ed.chunk.js.map",
     "runtime-main.js": "/MLAlgoViz/static/js/runtime-main.fa350540.js",
     "runtime-main.js.map": "/MLAlgoViz/static/js/runtime-main.fa350540.js.map",
     "static/js/2.99b63010.chunk.js": "/MLAlgoViz/static/js/2.99b63010.chunk.js",
@@ -10,7 +10,7 @@
     "static/js/3.c600f982.chunk.js": "/MLAlgoViz/static/js/3.c600f982.chunk.js",
     "static/js/3.c600f982.chunk.js.map": "/MLAlgoViz/static/js/3.c600f982.chunk.js.map",
     "index.html": "/MLAlgoViz/index.html",
-    "precache-manifest.7561bb1b4702d8c437919ddfc75bfdfc.js": "/MLAlgoViz/precache-manifest.7561bb1b4702d8c437919ddfc75bfdfc.js",
+    "precache-manifest.d2efda65a8f41ee9e5cad0919c87f3a9.js": "/MLAlgoViz/precache-manifest.d2efda65a8f41ee9e5cad0919c87f3a9.js",
     "service-worker.js": "/MLAlgoViz/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/MLAlgoViz/static/css/main.5ecd60fb.chunk.css.map",
     "static/js/2.99b63010.chunk.js.LICENSE.txt": "/MLAlgoViz/static/js/2.99b63010.chunk.js.LICENSE.txt"
@@ -19,6 +19,6 @@
     "static/js/runtime-main.fa350540.js",
     "static/js/2.99b63010.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.a6d1b438.chunk.js"
+    "static/js/main.7f8b90ed.chunk.js"
   ]
 }
