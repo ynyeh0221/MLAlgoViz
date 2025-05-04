@@ -5,3 +5,5 @@ MLAlgoViz is an interactive educational platform I developed to demystify comple
 This visualization toolkit serves as both a personal learning tool and a resource for students and professionals in the field. By making abstract concepts concrete and manipulable, MLAlgoViz bridges the gap between theoretical understanding and practical application. The platform continues to grow with new visualizations that address challenging ML concepts, optimization techniques, and architectural paradigms, providing an evolving resource for the machine learning community.
 
 **[Try the live demo](https://ynyeh0221.github.io/MLAlgoViz/)**
+
+[DEEPWIKI](https://deepwiki.com/ynyeh0221/MLAlgoViz)
